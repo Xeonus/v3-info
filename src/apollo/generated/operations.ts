@@ -15,7 +15,6 @@ export const LatestPrice = gql`
         asset
         pricingAsset
         price
-        priceUSD
         poolId {
             id
         }
@@ -37,7 +36,6 @@ export const BalancerChartTokenPrice = gql`
         id
         timestamp
         price
-        priceUSD
         amount
     }
 `;
@@ -53,7 +51,6 @@ export const BalancerTokenPrice = gql`
         price
         block
         timestamp
-        priceUSD
     }
 `;
 export const BalancerPoolToken = gql`
@@ -64,7 +61,6 @@ export const BalancerPoolToken = gql`
         decimals
         address
         balance
-        invested
         weight
         priceRate
         poolId {
@@ -118,7 +114,6 @@ export const BalancerJoinExit = gql`
         timestamp
         tx
         type
-        valueUSD
         user {
             id
         }
@@ -149,7 +144,6 @@ export const BalancerSwap = gql`
         }
         timestamp
         tx
-        valueUSD
     }
 `;
 export const BalancerToken = gql`

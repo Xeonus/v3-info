@@ -57,6 +57,7 @@ export interface AmpUpdate_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     poolId?: Maybe<Scalars['String']>;
+    poolId_?: Maybe<Pool_Filter>;
     poolId_contains?: Maybe<Scalars['String']>;
     poolId_contains_nocase?: Maybe<Scalars['String']>;
     poolId_ends_with?: Maybe<Scalars['String']>;
@@ -202,6 +203,7 @@ export interface BalancerSnapshot_Filter {
     totalSwapVolume_not?: Maybe<Scalars['BigDecimal']>;
     totalSwapVolume_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
     vault?: Maybe<Scalars['String']>;
+    vault_?: Maybe<Balancer_Filter>;
     vault_contains?: Maybe<Scalars['String']>;
     vault_contains_nocase?: Maybe<Scalars['String']>;
     vault_ends_with?: Maybe<Scalars['String']>;
@@ -252,6 +254,7 @@ export interface Balancer_Filter {
     poolCount_lte?: Maybe<Scalars['Int']>;
     poolCount_not?: Maybe<Scalars['Int']>;
     poolCount_not_in?: Maybe<Array<Scalars['Int']>>;
+    pools_?: Maybe<Pool_Filter>;
     totalLiquidity?: Maybe<Scalars['BigDecimal']>;
     totalLiquidity_gt?: Maybe<Scalars['BigDecimal']>;
     totalLiquidity_gte?: Maybe<Scalars['BigDecimal']>;
@@ -565,6 +568,7 @@ export interface GradualWeightUpdate_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     poolId?: Maybe<Scalars['String']>;
+    poolId_?: Maybe<Pool_Filter>;
     poolId_contains?: Maybe<Scalars['String']>;
     poolId_contains_nocase?: Maybe<Scalars['String']>;
     poolId_ends_with?: Maybe<Scalars['String']>;
@@ -654,6 +658,7 @@ export interface Investment_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     poolTokenId?: Maybe<Scalars['String']>;
+    poolTokenId_?: Maybe<PoolToken_Filter>;
     poolTokenId_contains?: Maybe<Scalars['String']>;
     poolTokenId_contains_nocase?: Maybe<Scalars['String']>;
     poolTokenId_ends_with?: Maybe<Scalars['String']>;
@@ -716,6 +721,7 @@ export interface JoinExit_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     pool?: Maybe<Scalars['String']>;
+    pool_?: Maybe<Pool_Filter>;
     pool_contains?: Maybe<Scalars['String']>;
     pool_contains_nocase?: Maybe<Scalars['String']>;
     pool_ends_with?: Maybe<Scalars['String']>;
@@ -760,6 +766,7 @@ export interface JoinExit_Filter {
     type_not?: Maybe<InvestType>;
     type_not_in?: Maybe<Array<InvestType>>;
     user?: Maybe<Scalars['String']>;
+    user_?: Maybe<User_Filter>;
     user_contains?: Maybe<Scalars['String']>;
     user_contains_nocase?: Maybe<Scalars['String']>;
     user_ends_with?: Maybe<Scalars['String']>;
@@ -828,6 +835,7 @@ export interface LatestPrice_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     poolId?: Maybe<Scalars['String']>;
+    poolId_?: Maybe<Pool_Filter>;
     poolId_contains?: Maybe<Scalars['String']>;
     poolId_contains_nocase?: Maybe<Scalars['String']>;
     poolId_ends_with?: Maybe<Scalars['String']>;
@@ -998,6 +1006,7 @@ export interface PoolHistoricalLiquidity_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     poolId?: Maybe<Scalars['String']>;
+    poolId_?: Maybe<Pool_Filter>;
     poolId_contains?: Maybe<Scalars['String']>;
     poolId_contains_nocase?: Maybe<Scalars['String']>;
     poolId_ends_with?: Maybe<Scalars['String']>;
@@ -1104,6 +1113,7 @@ export interface PoolShare_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     poolId?: Maybe<Scalars['String']>;
+    poolId_?: Maybe<Pool_Filter>;
     poolId_contains?: Maybe<Scalars['String']>;
     poolId_contains_nocase?: Maybe<Scalars['String']>;
     poolId_ends_with?: Maybe<Scalars['String']>;
@@ -1124,6 +1134,7 @@ export interface PoolShare_Filter {
     poolId_starts_with?: Maybe<Scalars['String']>;
     poolId_starts_with_nocase?: Maybe<Scalars['String']>;
     userAddress?: Maybe<Scalars['String']>;
+    userAddress_?: Maybe<User_Filter>;
     userAddress_contains?: Maybe<Scalars['String']>;
     userAddress_contains_nocase?: Maybe<Scalars['String']>;
     userAddress_ends_with?: Maybe<Scalars['String']>;
@@ -1189,6 +1200,7 @@ export interface PoolSnapshot_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     pool?: Maybe<Scalars['String']>;
+    pool_?: Maybe<Pool_Filter>;
     pool_contains?: Maybe<Scalars['String']>;
     pool_contains_nocase?: Maybe<Scalars['String']>;
     pool_ends_with?: Maybe<Scalars['String']>;
@@ -1367,6 +1379,7 @@ export interface PoolToken_Filter {
     invested_lte?: Maybe<Scalars['BigDecimal']>;
     invested_not?: Maybe<Scalars['BigDecimal']>;
     invested_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
+    investments_?: Maybe<Investment_Filter>;
     name?: Maybe<Scalars['String']>;
     name_contains?: Maybe<Scalars['String']>;
     name_contains_nocase?: Maybe<Scalars['String']>;
@@ -1388,6 +1401,7 @@ export interface PoolToken_Filter {
     name_starts_with?: Maybe<Scalars['String']>;
     name_starts_with_nocase?: Maybe<Scalars['String']>;
     poolId?: Maybe<Scalars['String']>;
+    poolId_?: Maybe<Pool_Filter>;
     poolId_contains?: Maybe<Scalars['String']>;
     poolId_contains_nocase?: Maybe<Scalars['String']>;
     poolId_ends_with?: Maybe<Scalars['String']>;
@@ -1436,6 +1450,7 @@ export interface PoolToken_Filter {
     symbol_starts_with?: Maybe<Scalars['String']>;
     symbol_starts_with_nocase?: Maybe<Scalars['String']>;
     token?: Maybe<Scalars['String']>;
+    token_?: Maybe<Token_Filter>;
     token_contains?: Maybe<Scalars['String']>;
     token_contains_nocase?: Maybe<Scalars['String']>;
     token_ends_with?: Maybe<Scalars['String']>;
@@ -1524,6 +1539,7 @@ export interface Pool_Filter {
     factory_not?: Maybe<Scalars['Bytes']>;
     factory_not_contains?: Maybe<Scalars['Bytes']>;
     factory_not_in?: Maybe<Array<Scalars['Bytes']>>;
+    historicalValues_?: Maybe<PoolHistoricalLiquidity_Filter>;
     holdersCount?: Maybe<Scalars['BigInt']>;
     holdersCount_gt?: Maybe<Scalars['BigInt']>;
     holdersCount_gte?: Maybe<Scalars['BigInt']>;
@@ -1610,12 +1626,14 @@ export interface Pool_Filter {
     poolType_not_starts_with_nocase?: Maybe<Scalars['String']>;
     poolType_starts_with?: Maybe<Scalars['String']>;
     poolType_starts_with_nocase?: Maybe<Scalars['String']>;
+    priceRateProviders_?: Maybe<PriceRateProvider_Filter>;
     principalToken?: Maybe<Scalars['Bytes']>;
     principalToken_contains?: Maybe<Scalars['Bytes']>;
     principalToken_in?: Maybe<Array<Scalars['Bytes']>>;
     principalToken_not?: Maybe<Scalars['Bytes']>;
     principalToken_not_contains?: Maybe<Scalars['Bytes']>;
     principalToken_not_in?: Maybe<Array<Scalars['Bytes']>>;
+    shares_?: Maybe<PoolShare_Filter>;
     strategyType?: Maybe<Scalars['Int']>;
     strategyType_gt?: Maybe<Scalars['Int']>;
     strategyType_gte?: Maybe<Scalars['Int']>;
@@ -1644,6 +1662,7 @@ export interface Pool_Filter {
     swapsCount_lte?: Maybe<Scalars['BigInt']>;
     swapsCount_not?: Maybe<Scalars['BigInt']>;
     swapsCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+    swaps_?: Maybe<Swap_Filter>;
     symbol?: Maybe<Scalars['String']>;
     symbol_contains?: Maybe<Scalars['String']>;
     symbol_contains_nocase?: Maybe<Scalars['String']>;
@@ -1670,6 +1689,7 @@ export interface Pool_Filter {
     tokensList_not?: Maybe<Array<Scalars['Bytes']>>;
     tokensList_not_contains?: Maybe<Array<Scalars['Bytes']>>;
     tokensList_not_contains_nocase?: Maybe<Array<Scalars['Bytes']>>;
+    tokens_?: Maybe<PoolToken_Filter>;
     totalLiquidity?: Maybe<Scalars['BigDecimal']>;
     totalLiquidity_gt?: Maybe<Scalars['BigDecimal']>;
     totalLiquidity_gte?: Maybe<Scalars['BigDecimal']>;
@@ -1733,6 +1753,7 @@ export interface Pool_Filter {
     upperTarget_not?: Maybe<Scalars['BigDecimal']>;
     upperTarget_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
     vaultID?: Maybe<Scalars['String']>;
+    vaultID_?: Maybe<Balancer_Filter>;
     vaultID_contains?: Maybe<Scalars['String']>;
     vaultID_contains_nocase?: Maybe<Scalars['String']>;
     vaultID_ends_with?: Maybe<Scalars['String']>;
@@ -1752,6 +1773,7 @@ export interface Pool_Filter {
     vaultID_not_starts_with_nocase?: Maybe<Scalars['String']>;
     vaultID_starts_with?: Maybe<Scalars['String']>;
     vaultID_starts_with_nocase?: Maybe<Scalars['String']>;
+    weightUpdates_?: Maybe<GradualWeightUpdate_Filter>;
     wrappedIndex?: Maybe<Scalars['Int']>;
     wrappedIndex_gt?: Maybe<Scalars['Int']>;
     wrappedIndex_gte?: Maybe<Scalars['Int']>;
@@ -1855,6 +1877,7 @@ export interface PriceRateProvider_Filter {
     lastCached_not?: Maybe<Scalars['Int']>;
     lastCached_not_in?: Maybe<Array<Scalars['Int']>>;
     poolId?: Maybe<Scalars['String']>;
+    poolId_?: Maybe<Pool_Filter>;
     poolId_contains?: Maybe<Scalars['String']>;
     poolId_contains_nocase?: Maybe<Scalars['String']>;
     poolId_ends_with?: Maybe<Scalars['String']>;
@@ -1883,6 +1906,7 @@ export interface PriceRateProvider_Filter {
     rate_not?: Maybe<Scalars['BigDecimal']>;
     rate_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
     token?: Maybe<Scalars['String']>;
+    token_?: Maybe<PoolToken_Filter>;
     token_contains?: Maybe<Scalars['String']>;
     token_contains_nocase?: Maybe<Scalars['String']>;
     token_ends_with?: Maybe<Scalars['String']>;
@@ -2761,6 +2785,7 @@ export interface Swap_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     poolId?: Maybe<Scalars['String']>;
+    poolId_?: Maybe<Pool_Filter>;
     poolId_contains?: Maybe<Scalars['String']>;
     poolId_contains_nocase?: Maybe<Scalars['String']>;
     poolId_ends_with?: Maybe<Scalars['String']>;
@@ -2863,6 +2888,7 @@ export interface Swap_Filter {
     tx_not_contains?: Maybe<Scalars['Bytes']>;
     tx_not_in?: Maybe<Array<Scalars['Bytes']>>;
     userAddress?: Maybe<Scalars['String']>;
+    userAddress_?: Maybe<User_Filter>;
     userAddress_contains?: Maybe<Scalars['String']>;
     userAddress_contains_nocase?: Maybe<Scalars['String']>;
     userAddress_ends_with?: Maybe<Scalars['String']>;
@@ -2969,6 +2995,7 @@ export interface TokenPrice_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     poolId?: Maybe<Scalars['String']>;
+    poolId_?: Maybe<Pool_Filter>;
     poolId_contains?: Maybe<Scalars['String']>;
     poolId_contains_nocase?: Maybe<Scalars['String']>;
     poolId_ends_with?: Maybe<Scalars['String']>;
@@ -3063,6 +3090,7 @@ export interface TokenSnapshot_Filter {
     timestamp_not?: Maybe<Scalars['Int']>;
     timestamp_not_in?: Maybe<Array<Scalars['Int']>>;
     token?: Maybe<Scalars['String']>;
+    token_?: Maybe<Token_Filter>;
     token_contains?: Maybe<Scalars['String']>;
     token_contains_nocase?: Maybe<Scalars['String']>;
     token_ends_with?: Maybe<Scalars['String']>;
@@ -3174,6 +3202,7 @@ export interface Token_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     latestPrice?: Maybe<Scalars['String']>;
+    latestPrice_?: Maybe<LatestPrice_Filter>;
     latestPrice_contains?: Maybe<Scalars['String']>;
     latestPrice_contains_nocase?: Maybe<Scalars['String']>;
     latestPrice_ends_with?: Maybe<Scalars['String']>;
@@ -3319,6 +3348,7 @@ export interface TradePairSnapshot_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     pair?: Maybe<Scalars['String']>;
+    pair_?: Maybe<TradePair_Filter>;
     pair_contains?: Maybe<Scalars['String']>;
     pair_contains_nocase?: Maybe<Scalars['String']>;
     pair_ends_with?: Maybe<Scalars['String']>;
@@ -3378,6 +3408,7 @@ export interface TradePair_Filter {
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
     token0?: Maybe<Scalars['String']>;
+    token0_?: Maybe<Token_Filter>;
     token0_contains?: Maybe<Scalars['String']>;
     token0_contains_nocase?: Maybe<Scalars['String']>;
     token0_ends_with?: Maybe<Scalars['String']>;
@@ -3398,6 +3429,7 @@ export interface TradePair_Filter {
     token0_starts_with?: Maybe<Scalars['String']>;
     token0_starts_with_nocase?: Maybe<Scalars['String']>;
     token1?: Maybe<Scalars['String']>;
+    token1_?: Maybe<Token_Filter>;
     token1_contains?: Maybe<Scalars['String']>;
     token1_contains_nocase?: Maybe<Scalars['String']>;
     token1_ends_with?: Maybe<Scalars['String']>;
@@ -3503,6 +3535,7 @@ export interface UserInternalBalance_Filter {
     token_not_contains?: Maybe<Scalars['Bytes']>;
     token_not_in?: Maybe<Array<Scalars['Bytes']>>;
     userAddress?: Maybe<Scalars['String']>;
+    userAddress_?: Maybe<User_Filter>;
     userAddress_contains?: Maybe<Scalars['String']>;
     userAddress_contains_nocase?: Maybe<Scalars['String']>;
     userAddress_ends_with?: Maybe<Scalars['String']>;
@@ -3537,6 +3570,9 @@ export interface User_Filter {
     id_lte?: Maybe<Scalars['ID']>;
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
+    sharesOwned_?: Maybe<PoolShare_Filter>;
+    swaps_?: Maybe<Swap_Filter>;
+    userInternalBalances_?: Maybe<UserInternalBalance_Filter>;
 }
 
 export type User_OrderBy = 'id' | 'sharesOwned' | 'swaps' | 'userInternalBalances';
@@ -3626,7 +3662,6 @@ export type GetProtocolDataQuery = {
         tokenAmountOut: string;
         timestamp: number;
         tx: string;
-        valueUSD: string;
         poolId: { __typename: 'Pool'; id: string; name?: string | null | undefined; address: string; swapFee: string };
         userAddress: { __typename: 'User'; id: string };
     }>;
@@ -3667,7 +3702,6 @@ export type GetTokenDataQuery = {
         asset: string;
         pricingAsset: string;
         price: string;
-        priceUSD: string;
         poolId: { __typename: 'Pool'; id: string };
     }>;
     tokens24: Array<{
@@ -3698,7 +3732,6 @@ export type GetTokenDataQuery = {
         asset: string;
         pricingAsset: string;
         price: string;
-        priceUSD: string;
         poolId: { __typename: 'Pool'; id: string };
     }>;
     tokensWeek: Array<{
@@ -3729,7 +3762,6 @@ export type GetTokenDataQuery = {
         asset: string;
         pricingAsset: string;
         price: string;
-        priceUSD: string;
         poolId: { __typename: 'Pool'; id: string };
     }>;
 };
@@ -3773,7 +3805,6 @@ export type GetTransactionDataQuery = {
         tokenAmountOut: string;
         timestamp: number;
         tx: string;
-        valueUSD: string;
         poolId: { __typename: 'Pool'; id: string; name?: string | null | undefined; address: string; swapFee: string };
         userAddress: { __typename: 'User'; id: string };
     }>;
@@ -3789,7 +3820,6 @@ export type GetTransactionDataQuery = {
         tokenAmountOut: string;
         timestamp: number;
         tx: string;
-        valueUSD: string;
         poolId: { __typename: 'Pool'; id: string; name?: string | null | undefined; address: string; swapFee: string };
         userAddress: { __typename: 'User'; id: string };
     }>;
@@ -3801,7 +3831,6 @@ export type GetTransactionDataQuery = {
         timestamp: number;
         tx: string;
         type: InvestType;
-        valueUSD: string;
         user: { __typename: 'User'; id: string };
         pool: { __typename: 'Pool'; id: string; tokensList: Array<string> };
     }>;
@@ -3854,7 +3883,6 @@ export type GetPoolDataQuery = {
                   decimals: number;
                   address: string;
                   balance: string;
-                  invested: string;
                   weight?: string | null | undefined;
                   priceRate: string;
                   poolId: { __typename: 'Pool'; id: string; address: string };
@@ -3890,7 +3918,6 @@ export type GetPoolDataQuery = {
                   decimals: number;
                   address: string;
                   balance: string;
-                  invested: string;
                   weight?: string | null | undefined;
                   priceRate: string;
                   poolId: { __typename: 'Pool'; id: string; address: string };
@@ -3926,7 +3953,6 @@ export type GetPoolDataQuery = {
                   decimals: number;
                   address: string;
                   balance: string;
-                  invested: string;
                   weight?: string | null | undefined;
                   priceRate: string;
                   poolId: { __typename: 'Pool'; id: string; address: string };
@@ -3962,7 +3988,6 @@ export type GetPoolDataQuery = {
                   decimals: number;
                   address: string;
                   balance: string;
-                  invested: string;
                   weight?: string | null | undefined;
                   priceRate: string;
                   poolId: { __typename: 'Pool'; id: string; address: string };
@@ -3975,7 +4000,6 @@ export type GetPoolDataQuery = {
         asset: string;
         pricingAsset: string;
         price: string;
-        priceUSD: string;
         poolId: { __typename: 'Pool'; id: string };
     }>;
 };
@@ -4047,7 +4071,6 @@ export type LatestPriceFragment = {
     asset: string;
     pricingAsset: string;
     price: string;
-    priceUSD: string;
     poolId: { __typename: 'Pool'; id: string };
 };
 
@@ -4143,7 +4166,6 @@ export type BalancerTokenPricesQuery = {
         price: string;
         block: string;
         timestamp: number;
-        priceUSD: string;
         poolId: { __typename: 'Pool'; id: string };
     }>;
 };
@@ -4154,54 +4176,12 @@ export type BalancerChartTokenPricesQueryVariables = Exact<{
 
 export type BalancerChartTokenPricesQuery = {
     __typename: 'Query';
-    prices1: Array<{
-        __typename: 'TokenPrice';
-        id: string;
-        timestamp: number;
-        price: string;
-        priceUSD: string;
-        amount: string;
-    }>;
-    prices2: Array<{
-        __typename: 'TokenPrice';
-        id: string;
-        timestamp: number;
-        price: string;
-        priceUSD: string;
-        amount: string;
-    }>;
-    prices3: Array<{
-        __typename: 'TokenPrice';
-        id: string;
-        timestamp: number;
-        price: string;
-        priceUSD: string;
-        amount: string;
-    }>;
-    prices4: Array<{
-        __typename: 'TokenPrice';
-        id: string;
-        timestamp: number;
-        price: string;
-        priceUSD: string;
-        amount: string;
-    }>;
-    prices5: Array<{
-        __typename: 'TokenPrice';
-        id: string;
-        timestamp: number;
-        price: string;
-        priceUSD: string;
-        amount: string;
-    }>;
-    prices6: Array<{
-        __typename: 'TokenPrice';
-        id: string;
-        timestamp: number;
-        price: string;
-        priceUSD: string;
-        amount: string;
-    }>;
+    prices1: Array<{ __typename: 'TokenPrice'; id: string; timestamp: number; price: string; amount: string }>;
+    prices2: Array<{ __typename: 'TokenPrice'; id: string; timestamp: number; price: string; amount: string }>;
+    prices3: Array<{ __typename: 'TokenPrice'; id: string; timestamp: number; price: string; amount: string }>;
+    prices4: Array<{ __typename: 'TokenPrice'; id: string; timestamp: number; price: string; amount: string }>;
+    prices5: Array<{ __typename: 'TokenPrice'; id: string; timestamp: number; price: string; amount: string }>;
+    prices6: Array<{ __typename: 'TokenPrice'; id: string; timestamp: number; price: string; amount: string }>;
 };
 
 export type BalancerChartTokenPriceFragment = {
@@ -4209,7 +4189,6 @@ export type BalancerChartTokenPriceFragment = {
     id: string;
     timestamp: number;
     price: string;
-    priceUSD: string;
     amount: string;
 };
 
@@ -4222,7 +4201,6 @@ export type BalancerTokenPriceFragment = {
     price: string;
     block: string;
     timestamp: number;
-    priceUSD: string;
     poolId: { __typename: 'Pool'; id: string };
 };
 
@@ -4254,7 +4232,6 @@ export type BalancerPoolFragment = {
               decimals: number;
               address: string;
               balance: string;
-              invested: string;
               weight?: string | null | undefined;
               priceRate: string;
               poolId: { __typename: 'Pool'; id: string; address: string };
@@ -4271,7 +4248,6 @@ export type BalancerPoolTokenFragment = {
     decimals: number;
     address: string;
     balance: string;
-    invested: string;
     weight?: string | null | undefined;
     priceRate: string;
     poolId: { __typename: 'Pool'; id: string; address: string };
@@ -4316,7 +4292,6 @@ export type GetBalancerPoolsQuery = {
                   decimals: number;
                   address: string;
                   balance: string;
-                  invested: string;
                   weight?: string | null | undefined;
                   priceRate: string;
                   poolId: { __typename: 'Pool'; id: string; address: string };
@@ -4362,7 +4337,6 @@ export type GetBalancerPoolQuery = {
                         decimals: number;
                         address: string;
                         balance: string;
-                        invested: string;
                         weight?: string | null | undefined;
                         priceRate: string;
                         poolId: { __typename: 'Pool'; id: string; address: string };
@@ -4393,7 +4367,6 @@ export type BalancerPoolTokensQuery = {
         decimals: number;
         address: string;
         balance: string;
-        invested: string;
         weight?: string | null | undefined;
         priceRate: string;
         poolId: { __typename: 'Pool'; id: string; address: string };
@@ -4495,7 +4468,6 @@ export type BalancerJoinExitsQuery = {
         timestamp: number;
         tx: string;
         type: InvestType;
-        valueUSD: string;
         user: { __typename: 'User'; id: string };
         pool: { __typename: 'Pool'; id: string; tokensList: Array<string> };
     }>;
@@ -4509,7 +4481,6 @@ export type BalancerJoinExitFragment = {
     timestamp: number;
     tx: string;
     type: InvestType;
-    valueUSD: string;
     user: { __typename: 'User'; id: string };
     pool: { __typename: 'Pool'; id: string; tokensList: Array<string> };
 };
@@ -4560,7 +4531,6 @@ export type BalancePortfolioDataQuery = {
                   decimals: number;
                   address: string;
                   balance: string;
-                  invested: string;
                   weight?: string | null | undefined;
                   priceRate: string;
                   poolId: { __typename: 'Pool'; id: string; address: string };
@@ -4607,7 +4577,6 @@ export type BalancePortfolioDataQuery = {
                   decimals: number;
                   address: string;
                   balance: string;
-                  invested: string;
                   weight?: string | null | undefined;
                   priceRate: string;
                   poolId: { __typename: 'Pool'; id: string; address: string };
@@ -4640,7 +4609,6 @@ export type BalancerSwapsQuery = {
         tokenAmountOut: string;
         timestamp: number;
         tx: string;
-        valueUSD: string;
         poolId: { __typename: 'Pool'; id: string; name?: string | null | undefined; address: string; swapFee: string };
         userAddress: { __typename: 'User'; id: string };
     }>;
@@ -4658,7 +4626,6 @@ export type BalancerSwapFragment = {
     tokenAmountOut: string;
     timestamp: number;
     tx: string;
-    valueUSD: string;
     poolId: { __typename: 'Pool'; id: string; name?: string | null | undefined; address: string; swapFee: string };
     userAddress: { __typename: 'User'; id: string };
 };
@@ -4891,7 +4858,6 @@ export type GetLatestPricesQuery = {
         asset: string;
         pricingAsset: string;
         price: string;
-        priceUSD: string;
         poolId: { __typename: 'Pool'; id: string };
     }>;
 };
@@ -4919,7 +4885,6 @@ export const LatestPriceFragmentDoc = gql`
         asset
         pricingAsset
         price
-        priceUSD
         poolId {
             id
         }
@@ -4941,7 +4906,6 @@ export const BalancerChartTokenPriceFragmentDoc = gql`
         id
         timestamp
         price
-        priceUSD
         amount
     }
 `;
@@ -4957,7 +4921,6 @@ export const BalancerTokenPriceFragmentDoc = gql`
         price
         block
         timestamp
-        priceUSD
     }
 `;
 export const BalancerPoolTokenFragmentDoc = gql`
@@ -4968,7 +4931,6 @@ export const BalancerPoolTokenFragmentDoc = gql`
         decimals
         address
         balance
-        invested
         weight
         priceRate
         poolId {
@@ -5022,7 +4984,6 @@ export const BalancerJoinExitFragmentDoc = gql`
         timestamp
         tx
         type
-        valueUSD
         user {
             id
         }
@@ -5053,7 +5014,6 @@ export const BalancerSwapFragmentDoc = gql`
         }
         timestamp
         tx
-        valueUSD
     }
 `;
 export const BalancerTokenFragmentDoc = gql`

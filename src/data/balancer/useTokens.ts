@@ -31,7 +31,7 @@ function getTokenValues(
 
 function getTokenPriceValues(tokenAddress: string, prices: LatestPriceFragment[]): { price: number } {
     const price = prices.find((prices) => prices.asset === tokenAddress);
-    const priceUSD = price ? parseFloat(price.priceUSD) : 0;
+    const priceUSD = price ? parseFloat(price.price) : 0;
 
     return { price: priceUSD };
 }

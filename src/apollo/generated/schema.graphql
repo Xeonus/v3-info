@@ -53,6 +53,7 @@ input AmpUpdate_filter {
     id_not: ID
     id_not_in: [ID!]
     poolId: String
+    poolId_: Pool_filter
     poolId_contains: String
     poolId_contains_nocase: String
     poolId_ends_with: String
@@ -197,6 +198,7 @@ input BalancerSnapshot_filter {
     totalSwapVolume_not: BigDecimal
     totalSwapVolume_not_in: [BigDecimal!]
     vault: String
+    vault_: Balancer_filter
     vault_contains: String
     vault_contains_nocase: String
     vault_ends_with: String
@@ -250,6 +252,7 @@ input Balancer_filter {
     poolCount_lte: Int
     poolCount_not: Int
     poolCount_not_in: [Int!]
+    pools_: Pool_filter
     totalLiquidity: BigDecimal
     totalLiquidity_gt: BigDecimal
     totalLiquidity_gte: BigDecimal
@@ -573,6 +576,7 @@ input GradualWeightUpdate_filter {
     id_not: ID
     id_not_in: [ID!]
     poolId: String
+    poolId_: Pool_filter
     poolId_contains: String
     poolId_contains_nocase: String
     poolId_ends_with: String
@@ -667,6 +671,7 @@ input Investment_filter {
     id_not: ID
     id_not_in: [ID!]
     poolTokenId: String
+    poolTokenId_: PoolToken_filter
     poolTokenId_contains: String
     poolTokenId_contains_nocase: String
     poolTokenId_ends_with: String
@@ -736,6 +741,7 @@ input JoinExit_filter {
     id_not: ID
     id_not_in: [ID!]
     pool: String
+    pool_: Pool_filter
     pool_contains: String
     pool_contains_nocase: String
     pool_ends_with: String
@@ -780,6 +786,7 @@ input JoinExit_filter {
     type_not: InvestType
     type_not_in: [InvestType!]
     user: String
+    user_: User_filter
     user_contains: String
     user_contains_nocase: String
     user_ends_with: String
@@ -859,6 +866,7 @@ input LatestPrice_filter {
     id_not: ID
     id_not_in: [ID!]
     poolId: String
+    poolId_: Pool_filter
     poolId_contains: String
     poolId_contains_nocase: String
     poolId_ends_with: String
@@ -1030,6 +1038,7 @@ input PoolHistoricalLiquidity_filter {
     id_not: ID
     id_not_in: [ID!]
     poolId: String
+    poolId_: Pool_filter
     poolId_contains: String
     poolId_contains_nocase: String
     poolId_ends_with: String
@@ -1138,6 +1147,7 @@ input PoolShare_filter {
     id_not: ID
     id_not_in: [ID!]
     poolId: String
+    poolId_: Pool_filter
     poolId_contains: String
     poolId_contains_nocase: String
     poolId_ends_with: String
@@ -1158,6 +1168,7 @@ input PoolShare_filter {
     poolId_starts_with: String
     poolId_starts_with_nocase: String
     userAddress: String
+    userAddress_: User_filter
     userAddress_contains: String
     userAddress_contains_nocase: String
     userAddress_ends_with: String
@@ -1229,6 +1240,7 @@ input PoolSnapshot_filter {
     id_not: ID
     id_not_in: [ID!]
     pool: String
+    pool_: Pool_filter
     pool_contains: String
     pool_contains_nocase: String
     pool_ends_with: String
@@ -1407,6 +1419,7 @@ input PoolToken_filter {
     invested_lte: BigDecimal
     invested_not: BigDecimal
     invested_not_in: [BigDecimal!]
+    investments_: Investment_filter
     name: String
     name_contains: String
     name_contains_nocase: String
@@ -1428,6 +1441,7 @@ input PoolToken_filter {
     name_starts_with: String
     name_starts_with_nocase: String
     poolId: String
+    poolId_: Pool_filter
     poolId_contains: String
     poolId_contains_nocase: String
     poolId_ends_with: String
@@ -1476,6 +1490,7 @@ input PoolToken_filter {
     symbol_starts_with: String
     symbol_starts_with_nocase: String
     token: String
+    token_: Token_filter
     token_contains: String
     token_contains_nocase: String
     token_ends_with: String
@@ -1567,6 +1582,7 @@ input Pool_filter {
     factory_not: Bytes
     factory_not_contains: Bytes
     factory_not_in: [Bytes!]
+    historicalValues_: PoolHistoricalLiquidity_filter
     holdersCount: BigInt
     holdersCount_gt: BigInt
     holdersCount_gte: BigInt
@@ -1653,12 +1669,14 @@ input Pool_filter {
     poolType_not_starts_with_nocase: String
     poolType_starts_with: String
     poolType_starts_with_nocase: String
+    priceRateProviders_: PriceRateProvider_filter
     principalToken: Bytes
     principalToken_contains: Bytes
     principalToken_in: [Bytes!]
     principalToken_not: Bytes
     principalToken_not_contains: Bytes
     principalToken_not_in: [Bytes!]
+    shares_: PoolShare_filter
     strategyType: Int
     strategyType_gt: Int
     strategyType_gte: Int
@@ -1687,6 +1705,7 @@ input Pool_filter {
     swapsCount_lte: BigInt
     swapsCount_not: BigInt
     swapsCount_not_in: [BigInt!]
+    swaps_: Swap_filter
     symbol: String
     symbol_contains: String
     symbol_contains_nocase: String
@@ -1713,6 +1732,7 @@ input Pool_filter {
     tokensList_not: [Bytes!]
     tokensList_not_contains: [Bytes!]
     tokensList_not_contains_nocase: [Bytes!]
+    tokens_: PoolToken_filter
     totalLiquidity: BigDecimal
     totalLiquidity_gt: BigDecimal
     totalLiquidity_gte: BigDecimal
@@ -1776,6 +1796,7 @@ input Pool_filter {
     upperTarget_not: BigDecimal
     upperTarget_not_in: [BigDecimal!]
     vaultID: String
+    vaultID_: Balancer_filter
     vaultID_contains: String
     vaultID_contains_nocase: String
     vaultID_ends_with: String
@@ -1795,6 +1816,7 @@ input Pool_filter {
     vaultID_not_starts_with_nocase: String
     vaultID_starts_with: String
     vaultID_starts_with_nocase: String
+    weightUpdates_: GradualWeightUpdate_filter
     wrappedIndex: Int
     wrappedIndex_gt: Int
     wrappedIndex_gte: Int
@@ -1900,6 +1922,7 @@ input PriceRateProvider_filter {
     lastCached_not: Int
     lastCached_not_in: [Int!]
     poolId: String
+    poolId_: Pool_filter
     poolId_contains: String
     poolId_contains_nocase: String
     poolId_ends_with: String
@@ -1928,6 +1951,7 @@ input PriceRateProvider_filter {
     rate_not: BigDecimal
     rate_not_in: [BigDecimal!]
     token: String
+    token_: PoolToken_filter
     token_contains: String
     token_contains_nocase: String
     token_ends_with: String
@@ -3242,6 +3266,7 @@ input Swap_filter {
     id_not: ID
     id_not_in: [ID!]
     poolId: String
+    poolId_: Pool_filter
     poolId_contains: String
     poolId_contains_nocase: String
     poolId_ends_with: String
@@ -3344,6 +3369,7 @@ input Swap_filter {
     tx_not_contains: Bytes
     tx_not_in: [Bytes!]
     userAddress: String
+    userAddress_: User_filter
     userAddress_contains: String
     userAddress_contains_nocase: String
     userAddress_ends_with: String
@@ -3451,6 +3477,7 @@ input TokenPrice_filter {
     id_not: ID
     id_not_in: [ID!]
     poolId: String
+    poolId_: Pool_filter
     poolId_contains: String
     poolId_contains_nocase: String
     poolId_ends_with: String
@@ -3547,6 +3574,7 @@ input TokenSnapshot_filter {
     timestamp_not: Int
     timestamp_not_in: [Int!]
     token: String
+    token_: Token_filter
     token_contains: String
     token_contains_nocase: String
     token_ends_with: String
@@ -3661,6 +3689,7 @@ input Token_filter {
     id_not: ID
     id_not_in: [ID!]
     latestPrice: String
+    latestPrice_: LatestPrice_filter
     latestPrice_contains: String
     latestPrice_contains_nocase: String
     latestPrice_ends_with: String
@@ -3809,6 +3838,7 @@ input TradePairSnapshot_filter {
     id_not: ID
     id_not_in: [ID!]
     pair: String
+    pair_: TradePair_filter
     pair_contains: String
     pair_contains_nocase: String
     pair_ends_with: String
@@ -3876,6 +3906,7 @@ input TradePair_filter {
     id_not: ID
     id_not_in: [ID!]
     token0: String
+    token0_: Token_filter
     token0_contains: String
     token0_contains_nocase: String
     token0_ends_with: String
@@ -3896,6 +3927,7 @@ input TradePair_filter {
     token0_starts_with: String
     token0_starts_with_nocase: String
     token1: String
+    token1_: Token_filter
     token1_contains: String
     token1_contains_nocase: String
     token1_ends_with: String
@@ -4001,6 +4033,7 @@ input UserInternalBalance_filter {
     token_not_contains: Bytes
     token_not_in: [Bytes!]
     userAddress: String
+    userAddress_: User_filter
     userAddress_contains: String
     userAddress_contains_nocase: String
     userAddress_ends_with: String
@@ -4042,6 +4075,9 @@ input User_filter {
     id_lte: ID
     id_not: ID
     id_not_in: [ID!]
+    sharesOwned_: PoolShare_filter
+    swaps_: Swap_filter
+    userInternalBalances_: UserInternalBalance_filter
 }
 
 enum User_orderBy {

@@ -1,6 +1,6 @@
 schema:
   - 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks'
-  - 'https://api.thegraph.com/subgraphs/name/xeonus/balancer-v2-analytics'
+  - 'https://api.thegraph.com/subgraphs/name/xeonus/balancer-v2'
 documents:
   - 'src/**/*.gql'
 hooks:
