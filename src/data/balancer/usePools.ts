@@ -69,7 +69,7 @@ function getEpochSwapFees(
 
 
 //Poolsnapshots are taken OO:OO UTC. Generate previous snapshot date and previous Thu. Used to calculate weekly sweep fee generators
-const target = 3 // Wednesday
+const target = 1 // Wednesday
 const prevThuDate = new Date()
 prevThuDate.setDate(prevThuDate.getDate() - ( prevThuDate.getDay() == target ? 7 : (prevThuDate.getDay() + (7 - target)) % 7 ));
 prevThuDate.setUTCHours(0,0,0,0);
