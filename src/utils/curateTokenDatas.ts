@@ -4,6 +4,7 @@ import { ERC20TokenData } from "./getAddressTokenBalances";
 
 export default function curateTokenDatas(tokenDatas: TokenData[], walletTokenData: WalletTokenData, sweepLimit: number, sweepLimitActive: boolean): TokenData[] {
     const newTokenDatas: TokenData[] = [];
+    if (walletTokenData.error === false) {
     walletTokenData.data.items.forEach((item: ERC20TokenData) => {
         tokenDatas.forEach((tokenData: TokenData) => {
             if (item.quote_rate_24h) {
@@ -31,7 +32,8 @@ export default function curateTokenDatas(tokenDatas: TokenData[], walletTokenDat
         });
         //TODO: If token data does not exist, populate it from walletTokenData
 
-
+    
     });
+    }
     return newTokenDatas;
 }

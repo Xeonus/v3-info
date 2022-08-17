@@ -105,7 +105,7 @@ export default function ProtocolFees() {
         usdcAddress = '0x2791bca1f2de4661ed88a30c99a7a9449aa84174';
         sweepLimit = 5000;
     }
-
+    const covalentError = 'Wallet data could not be loaded. Covalent API unreachable';
     const [feesHover, setFeesHover] = useState<number | undefined>();
     const [feesLabel, setFeesLabel] = useState<string | undefined>();
     const [liquidityHover, setLiquidityHover] = useState<number | undefined>();
@@ -436,14 +436,21 @@ export default function ProtocolFees() {
                                             </DarkGreyCard>)}
                                 </ AutoColumn>)}
                 </ContentLayout> */}
-                {!isEmptySet ?
+                
+                {walletTokenData?.error ?
+                <TYPE.yellow>{covalentError}</TYPE.yellow> : null }
+                {!isEmptySet && walletTokenData?.error === false ?
                     <TYPE.main>Tokens to be swept</TYPE.main>
                     : null}
-                {!isEmptySet ?
+                {!isEmptySet && walletTokenData?.error === false ?
                     <ProtocolFeeTokenTable tokenDatas={formattedTokens} walletTokenDatas={walletTokenData} sweepLimitActive={true} />
                     : null}
-                <TYPE.main> Tokens below weekly sweep threshold ({formatDollarAmount(sweepLimit, 0, true)}) </TYPE.main>
+                {walletTokenData?.error === false ?
+                    <TYPE.main> Tokens below weekly sweep threshold ({formatDollarAmount(sweepLimit, 0, true)}) </TYPE.main> 
+                : null }
+                {walletTokenData?.error === false ?
                 <ProtocolFeeTokenTable tokenDatas={formattedTokens} walletTokenDatas={walletTokenData} sweepLimitActive={false} />
+                : null }
                 <TYPE.main> Top performing Pools by Fees Collected (Epoch: {prevDate.toLocaleDateString()} - {today.toLocaleDateString()}, 00:00 UTC) </TYPE.main>
                 <PoolFeeTable poolDatas={poolData} />
             </AutoColumn>
