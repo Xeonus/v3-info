@@ -83,7 +83,7 @@ export interface WalletTransactiondata {
 export function GetAddressTransactionData (address: string) {
     const [activeNetwork] = useActiveNetworkVersion();
     const baseURI = 'https://api.covalenthq.com/v1/';
-    const queryParams = '/address/' + address + '/transactions_v2/?&key=ckey_0234f04900264446a5dfbd4687d';
+    const queryParams = '/address/' + address + '/transactions_v2/?page-size=10000&key=ckey_0234f04900264446a5dfbd4687d';
         const [jsonData, setJsonData] = useState<WalletTransactiondata>();
         //Fetch Balancer Front-End Json containing incentives data:
         useEffect(() => {
@@ -100,6 +100,5 @@ export function GetAddressTransactionData (address: string) {
     
             fetchData();
         }, []);
-
     return jsonData;
 }
