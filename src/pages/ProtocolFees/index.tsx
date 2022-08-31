@@ -439,8 +439,8 @@ export default function ProtocolFees() {
                 
                 {walletTokenData?.error ?
                 <TYPE.yellow>{covalentError}</TYPE.yellow> : null }
-                {!isEmptySet && walletTokenData?.error === false ?
-                    <TYPE.main>Tokens to be swept</TYPE.main>
+                {!isEmptySet && totalAmount && walletTokenData?.error === false ?
+                    <TYPE.main>Tokens to be swept - {formatDollarAmount(totalAmount)}</TYPE.main>
                     : null}
                 {!isEmptySet && walletTokenData?.error === false ?
                     <ProtocolFeeTokenTable tokenDatas={formattedTokens} walletTokenDatas={walletTokenData} sweepLimitActive={true} />
