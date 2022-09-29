@@ -300,25 +300,13 @@ export const GetTransactionData = gql`
 `;
 export const GetPoolData = gql`
     query GetPoolData($block24: Block_height!, $block48: Block_height!, $blockWeek: Block_height!) {
-        pools(first: 1000, orderBy: totalLiquidity, orderDirection: desc, where: { totalLiquidity_gt: "0.01" }) {
+        pools(first: 1000, orderBy: totalLiquidity, orderDirection: desc) {
             ...BalancerPool
         }
-        pools24: pools(
-            first: 1000
-            orderBy: totalLiquidity
-            orderDirection: desc
-            where: { totalLiquidity_gt: "0.01" }
-            block: $block24
-        ) {
+        pools24: pools(first: 1000, orderBy: totalLiquidity, orderDirection: desc, block: $block24) {
             ...BalancerPool
         }
-        pools48: pools(
-            first: 1000
-            orderBy: totalLiquidity
-            orderDirection: desc
-            where: { totalLiquidity_gt: "0.01" }
-            block: $block48
-        ) {
+        pools48: pools(first: 1000, orderBy: totalLiquidity, orderDirection: desc, block: $block48) {
             ...BalancerPool
         }
         poolsWeek: pools(
@@ -359,13 +347,9 @@ export const GetPoolChartData = gql`
         ) {
             id
             amounts
-            totalShares
             swapVolume
             swapFees
             timestamp
-            totalSwapVolume
-            totalSwapFee
-            totalLiquidity
             swapsCount
             holdersCount
             pool {
@@ -388,9 +372,6 @@ export const BalancerPoolSwapFeeSnapshot = gql`
             swapVolume
             swapFees
             timestamp
-            totalSwapVolume
-            totalSwapFee
-            totalLiquidity
             swapsCount
             holdersCount
             pool {

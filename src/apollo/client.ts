@@ -21,7 +21,7 @@ export const blockClient = new ApolloClient({
 });
 
 export const client = new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/xeonus/balancer-v2-analytics',
+    uri: 'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2',
     cache: new InMemoryCache({
         typePolicies: {
             Token: {
@@ -49,7 +49,7 @@ export const client = new ApolloClient({
 });
 
 export const arbitrumClient = new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/xeonus/balancer-v2-analytics-arbitrum',
+    uri: 'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-arbitrum-v2',
     cache: new InMemoryCache({
       typePolicies: {
         Token: {
@@ -92,7 +92,7 @@ export const arbitrumClient = new ApolloClient({
   })
 
   export const polygonClient = new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/xeonus/balancer-v2-analytics-polygon',
+    uri: 'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-polygon-v2',
     cache: new InMemoryCache({
       typePolicies: {
         Token: {

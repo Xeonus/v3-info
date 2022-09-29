@@ -110,7 +110,6 @@ query GetPoolData($block24: Block_height!, $block48: Block_height!, $blockWeek: 
         first: 1000
         orderBy: totalLiquidity
         orderDirection: desc
-        where: {totalLiquidity_gt: "0.01"}
     ) {
         ...BalancerPool
     }
@@ -118,7 +117,6 @@ query GetPoolData($block24: Block_height!, $block48: Block_height!, $blockWeek: 
         first: 1000
         orderBy: totalLiquidity
         orderDirection: desc,
-        where: {totalLiquidity_gt: "0.01"}
         block: $block24
     ) {
         ...BalancerPool
@@ -127,7 +125,6 @@ query GetPoolData($block24: Block_height!, $block48: Block_height!, $blockWeek: 
         first: 1000
         orderBy: totalLiquidity
         orderDirection: desc,
-        where: {totalLiquidity_gt: "0.01"}
         block: $block48
     ) {
         ...BalancerPool
@@ -163,13 +160,9 @@ query GetPoolChartData($poolId: String!, $startTimestamp: Int!) {
     poolSnapshots(first: 1000, orderBy: timestamp, orderDirection: asc, where: {pool: $poolId, timestamp_gte: $startTimestamp}) {
         id
         amounts
-        totalShares
         swapVolume
         swapFees
         timestamp
-        totalSwapVolume
-        totalSwapFee
-        totalLiquidity
         swapsCount
         holdersCount
         pool {
@@ -191,9 +184,6 @@ query BalancerPoolSwapFeeSnapshot($startTimestamp: Int!, $endTimeStamp: Int!) {
         swapVolume
         swapFees
         timestamp
-        totalSwapVolume
-        totalSwapFee
-        totalLiquidity
         swapsCount
         holdersCount
         pool {

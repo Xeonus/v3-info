@@ -200,10 +200,12 @@ export function useBalancerPoolPageData(poolId: string): {
     }
 
     const { poolSnapshots } = data;
+
+    console.log("usePools data", data);
     
 
     const tvlData = poolSnapshots.map((snapshot) => ({
-        value: parseFloat(snapshot.totalLiquidity),
+        value: parseFloat(snapshot.swapVolume),
         time: unixToDate(snapshot.timestamp),
     }));
 
