@@ -3,23 +3,26 @@ import { useActiveNetworkVersion } from "state/application/hooks";
 
 //Coingecko Interface
 export interface CoingeckoRawData {
-    prices: number[][];
-    market_caps: number[][];
-    total_volumes: number[][];
+    [id: string]: FiatPrice
+}
+
+export interface FiatPrice {
+    usd: number,
+    usd_24h_change: number
 }
 
 //Get historical Coingecko price data based on specific time-range (-> aligned to subgraph snapshots)
-export function GetCoingeckoData (addresses: string[], network: string, vs_currency: string) {
-    const [activeNetwork] = useActiveNetworkVersion();
-    const addressesString = '';
+export function GetCoingeckoData (addresses: string[], network: string) {
+    let addressesString = '';
+    addresses.forEach(el => {
+       addressesString = addressesString + el + ','})
     const baseURI = 'https://api.coingecko.com/api/v3/simple/token_price/';
-    const queryParams = network + '?contract_addresses=' + addressesString + '/market_cart/range?vs_currency=usd&from=' + '&vs_currencies=' + vs_currency;
+    const queryParams = network + '?contract_addresses=' + addressesString + '&vs_currencies=usd&include_24hr_change=true';
         const [jsonData, setJsonData] = useState<CoingeckoRawData>();
-        //Fetch Balancer Front-End Json containing incentives data:
         useEffect(() => {
             const fetchData = async () => {
                 try {
-                    const response = await fetch(baseURI + activeNetwork.chainId + queryParams);
+                    const response = await fetch(baseURI + queryParams);
                     const json: CoingeckoRawData = await response.json();
                     setJsonData(json);
                     

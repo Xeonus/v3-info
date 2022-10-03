@@ -1,6 +1,7 @@
 import { useActiveNetworkVersion } from 'state/application/hooks';
 import { SupportedNetwork } from 'constants/networks';
 import { useBalancerTokenPageData } from './useTokens';
+import { useCoinGeckoSimpleTokenPrices } from 'data/coingecko/useCoinGeckoSimpleTokenPrices';
 
 //TODO: Network dependent address fetching!
 const WETH_ADDRESS = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
@@ -40,16 +41,18 @@ export function useLatestPrices(): { eth?: number; bal?: number } {
 
     const [activeNetwork] = useActiveNetworkVersion();
     //V2: latest price is not reliable, therefore get chartdata that has the correct USD value:
-    const balTokenData = useBalancerTokenPageData(getBalTokenAddress(activeNetwork.id)).priceData;
-    const wethTokenData = useBalancerTokenPageData(getWethTokenAddress(activeNetwork.id)).priceData;
+    //const balTokenData = useBalancerTokenPageData(getBalTokenAddress(activeNetwork.id)).priceData;
+    //const wethTokenData = useBalancerTokenPageData(getWethTokenAddress(activeNetwork.id)).priceData;
+    //V3: obtain token price from Coingecko
+    const tokenPrices = useCoinGeckoSimpleTokenPrices([getBalTokenAddress(activeNetwork.id), getWethTokenAddress(activeNetwork.id)]);
 
     //const wethChartData = chartData;
     let bal = 0;
     let eth = 0;
 
-    if (balTokenData.length >0 && wethTokenData.length > 0) {
-      bal = balTokenData[balTokenData.length -1].value;
-      eth = wethTokenData[wethTokenData.length-1].value;
+    if (tokenPrices && tokenPrices[getBalTokenAddress(activeNetwork.id)] && tokenPrices[getWethTokenAddress(activeNetwork.id)]) {
+      bal = tokenPrices[getBalTokenAddress(activeNetwork.id)].usd;
+      eth = tokenPrices[getWethTokenAddress(activeNetwork.id)].usd;
     }
 
     return {

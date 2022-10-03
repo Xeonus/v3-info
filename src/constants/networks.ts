@@ -13,6 +13,7 @@ export enum SupportedNetwork {
 export type NetworkInfo = {
   id: SupportedNetwork
   chainId: string
+  coingeckoId: string
   route: string
   name: string
   startTimeStamp: number
@@ -28,6 +29,7 @@ export type NetworkInfo = {
 export const EthereumNetworkInfo: NetworkInfo = {
     id: SupportedNetwork.ETHEREUM,
     chainId: '1',
+    coingeckoId: 'ethereum',
     route: '',
     name: 'Ethereum',
     startTimeStamp: 1619874000,
@@ -42,6 +44,7 @@ export const EthereumNetworkInfo: NetworkInfo = {
 export const ArbitrumNetworkInfo: NetworkInfo = {
   id: SupportedNetwork.ARBITRUM,
   chainId: '42161',
+  coingeckoId: 'arbitrum-one',
   route: 'arbitrum',
   name: 'Arbitrum',
   startTimeStamp: 1619874000,
@@ -57,6 +60,7 @@ export const ArbitrumNetworkInfo: NetworkInfo = {
 export const PolygonNetworkInfo: NetworkInfo = {
   id: SupportedNetwork.POLYGON,
   chainId: '137',
+  coingeckoId: 'polygon-pos',
   route: 'polygon',
   name: 'Polygon',
   startTimeStamp: 1619874000,

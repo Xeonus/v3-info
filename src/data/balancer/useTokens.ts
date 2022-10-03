@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { unixToDate } from '../../utils/date';
 import { BalancerChartDataItem, TokenData } from './balancerTypes';
 import { useActiveNetworkVersion } from 'state/application/hooks';
+import { GetCoingeckoData } from 'utils/getCoingecoSimpleTokenPrices';
 
 function getTokenValues(
     tokenAddress: string,
