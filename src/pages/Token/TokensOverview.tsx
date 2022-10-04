@@ -32,7 +32,7 @@ export default function TokensOverview() {
     const formattedTokens = useBalancerTokens();
     const watchListTokens = formattedTokens.filter((token) => savedTokens.includes(token.address));
 
-    const tokenAddresses: Array<string> = [];
+/*     const tokenAddresses: Array<string> = [];
     useEffect(() => {
         //V2: repopulate formatted token data with coingecko data
         if (formattedTokens.length > 10) {
@@ -44,17 +44,25 @@ export default function TokensOverview() {
         const getTokenPrices = async (addresses: string) => {
             const baseURI = 'https://api.coingecko.com/api/v3/simple/token_price/';
             const queryParams = activeNetwork.coingeckoId + '?contract_addresses=' + addresses + '&vs_currencies=usd&include_24hr_change=true';
-            const coingeckoResponse = await fetch(baseURI + queryParams);
-            const json: CoingeckoRawData = await coingeckoResponse.json();
-            console.log("json", json);
+            try {
+                const coingeckoResponse = await fetch(baseURI + queryParams);
+                console.log("response", coingeckoResponse)
+                const json: CoingeckoRawData = await coingeckoResponse.json();
+                console.log("json", json);
+            if (coingeckoResponse.ok && json) {
             formattedTokens.forEach(token => {
                 if (json[token.address] && json[token.address].usd) {
                     token.priceUSD = json[token.address].usd;
+
                 }
                 if (json[token.address] && json[token.address].usd_24h_change) {
                     token.priceUSDChange = json[token.address].usd_24h_change;
                 }
             })
+        }
+        } catch {
+            console.log("Coingecko: token_price API failed")
+        }
         }
         const tokenAddresses1 = tokenAddresses.slice(1, 150);
         const tokenAddresses2 = tokenAddresses.slice(151, 300);
@@ -71,7 +79,7 @@ export default function TokensOverview() {
 
         //getTokenPrices(addressesString2);
 
-    }, [formattedTokens, tokenAddresses]);
+    }, [formattedTokens, tokenAddresses]); */
 
     return (
         <PageWrapper>

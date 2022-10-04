@@ -21,7 +21,7 @@ export const blockClient = new ApolloClient({
 });
 
 export const client = new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2',
+    uri: 'https://api.thegraph.com/subgraphs/name/xeonus/balancer-v2-analytics',
     cache: new InMemoryCache({
         typePolicies: {
             Token: {

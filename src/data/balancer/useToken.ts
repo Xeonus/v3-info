@@ -28,7 +28,7 @@ export function useBalancerToken(tokenAddress: string): BalancerTokenData {
 
     const formatted = prices.map((price) => ({
         ...price,
-        priceUSD: parseFloat(price.priceUSD),
+        priceUSD: parseFloat(price.amount),
         amount: parseFloat(price.amount),
     }));
     const grouped = groupBy(formatted, (price) => `${Math.ceil(price.timestamp / TIME_INTERVAL) * TIME_INTERVAL}`);

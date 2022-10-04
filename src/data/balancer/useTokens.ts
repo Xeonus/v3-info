@@ -10,7 +10,17 @@ import { useEffect } from 'react';
 import { unixToDate } from '../../utils/date';
 import { BalancerChartDataItem, TokenData } from './balancerTypes';
 import { useActiveNetworkVersion } from 'state/application/hooks';
-import { GetCoingeckoData } from 'utils/getCoingecoSimpleTokenPrices';
+import { useState } from 'react';
+
+//Coingecko Interface
+export interface CoingeckoRawData {
+    [id: string]: FiatPrice
+}
+
+export interface FiatPrice {
+    usd: number,
+    usd_24h_change: number
+}
 
 function getTokenValues(
     tokenAddress: string,
@@ -43,6 +53,9 @@ export function useBalancerTokens(): TokenData[] {
     const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48, tWeek]);
     const [block24, block48, blockWeek] = blocks ?? [];
     const [getTokenData, { data }] = useGetTokenDataLazyQuery();
+    const tokenAddresses: Array<string> = [];
+    //let coingeckoData = {} as CoingeckoRawData;
+    const [coingeckoData, setCoingeckoData] = useState<CoingeckoRawData>();
 
     useEffect(() => {
         if (block24) {
@@ -59,6 +72,44 @@ export function useBalancerTokens(): TokenData[] {
         }
     }, [block24]);
 
+
+    useEffect(() => {
+        //V2: repopulate formatted token data with coingecko data
+        if (data && data.tokens.length > 10) {
+            data.tokens.forEach(token => {
+                tokenAddresses.push(token.address);
+            })
+        
+        const getTokenPrices = async (addresses: string) => {
+            const baseURI = 'https://api.coingecko.com/api/v3/simple/token_price/';
+            const queryParams = activeNetwork.coingeckoId + '?contract_addresses=' + addresses + '&vs_currencies=usd&include_24hr_change=true';
+            try {
+                const coingeckoResponse = await fetch(baseURI + queryParams);
+                //console.log("response", coingeckoResponse)
+                const json = await coingeckoResponse.json();
+                console.log("json", json);
+                setCoingeckoData(json);
+        } catch {
+            console.log("Coingecko: token_price API not reachable")
+        }
+        }
+        const tokenAddresses1 = tokenAddresses.slice(1, 150);
+        const tokenAddresses2 = tokenAddresses.slice(151, 300);
+        //raw batch call in hook:
+        let addressesString1 = '';
+        tokenAddresses1.forEach(el => {
+            addressesString1 = addressesString1 + el + ','})
+
+        getTokenPrices(addressesString1);
+
+        let addressesString2 = '';
+        tokenAddresses2.forEach(el => {
+            addressesString2 = addressesString2 + el + ','})
+
+        //getTokenPrices(addressesString2);
+        }
+    }, [data]);
+
     if (!data) {
         return [];
     }
@@ -71,7 +122,14 @@ export function useBalancerTokens(): TokenData[] {
         //const tokenData48 = getTokenValues(token.address, tokens48);
         const tokenDataWeek = getTokenValues(token.address, tokensWeek);
         const priceData = getTokenPriceValues(token.address, prices);
+        //override:
+        let priceChange = 0
+        if (coingeckoData && coingeckoData[token.address]) {
+            priceData.price = coingeckoData[token.address].usd
+            priceChange = coingeckoData[token.address].usd_24h_change
+        }
         const priceData24 = getTokenPriceValues(token.address, prices24);
+        
         //const priceData48 = getTokenPriceValues(token.address, prices48);
         const priceDataWeek = getTokenPriceValues(token.address, pricesWeek);
         const valueUSDCollected = 0;
@@ -91,10 +149,7 @@ export function useBalancerTokens(): TokenData[] {
             valueUSDCollected: valueUSDCollected,
             tvlUSDChange: (tokenData.tvl - tokenData24.tvl) / tokenData24.tvl,
             priceUSD: priceData.price,
-            priceUSDChange:
-                priceData.price && priceData24.price
-                    ? ((priceData.price - priceData24.price) / priceData24.price) * 100
-                    : 0,
+            priceUSDChange: priceChange,
             priceUSDChangeWeek:
                 priceData.price && priceDataWeek.price
                     ? ((priceData.price - priceDataWeek.price) / priceDataWeek.price) * 100
