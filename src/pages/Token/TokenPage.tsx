@@ -108,6 +108,7 @@ export default function TokenPage({
     const { tvlData, volumeData, priceData } = useBalancerTokenPageData(address);
     //CandleChart Data
      const { chartData } = useBalancerToken(address);
+     //console.log("chartData", chartData);
 
     // chart labels
     const [view, setView] = useState(ChartView.VOL);

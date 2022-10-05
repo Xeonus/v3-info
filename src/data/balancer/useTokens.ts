@@ -12,7 +12,7 @@ import { BalancerChartDataItem, TokenData } from './balancerTypes';
 import { useActiveNetworkVersion } from 'state/application/hooks';
 import { useState } from 'react';
 
-//Coingecko Interface
+//Coingecko Token price Interface
 export interface CoingeckoRawData {
     [id: string]: FiatPrice
 }
@@ -20,6 +20,13 @@ export interface CoingeckoRawData {
 export interface FiatPrice {
     usd: number,
     usd_24h_change: number
+}
+
+//Coingecko Snapshot Interface
+export interface CoingeckoSnapshotPriceData {
+    prices: number[][];
+    market_caps: number[][];
+    total_volumes: number[][];
 }
 
 function getTokenValues(
@@ -79,34 +86,39 @@ export function useBalancerTokens(): TokenData[] {
             data.tokens.forEach(token => {
                 tokenAddresses.push(token.address);
             })
-        
-        const getTokenPrices = async (addresses: string) => {
-            const baseURI = 'https://api.coingecko.com/api/v3/simple/token_price/';
-            const queryParams = activeNetwork.coingeckoId + '?contract_addresses=' + addresses + '&vs_currencies=usd&include_24hr_change=true';
-            try {
-                const coingeckoResponse = await fetch(baseURI + queryParams);
-                //console.log("response", coingeckoResponse)
-                const json = await coingeckoResponse.json();
-                console.log("json", json);
-                setCoingeckoData(json);
-        } catch {
-            console.log("Coingecko: token_price API not reachable")
-        }
-        }
-        const tokenAddresses1 = tokenAddresses.slice(1, 150);
-        const tokenAddresses2 = tokenAddresses.slice(151, 300);
-        //raw batch call in hook:
-        let addressesString1 = '';
-        tokenAddresses1.forEach(el => {
-            addressesString1 = addressesString1 + el + ','})
 
-        getTokenPrices(addressesString1);
+            const getTokenPrices = async (addresses: string) => {
+                const baseURI = 'https://api.coingecko.com/api/v3/simple/token_price/';
+                const queryParams = activeNetwork.coingeckoId + '?contract_addresses=' + addresses + '&vs_currencies=usd&include_24hr_change=true';
+                try {
+                    const coingeckoResponse = await fetch(baseURI + queryParams);
+                    const json = await coingeckoResponse.json();
+                    //TODO: find way to append to interface object?
+                    const spread = {
+                        ...coingeckoData,
+                        json
+                    }
+                    setCoingeckoData(json);
+                } catch {
+                    console.log("Coingecko: token_price API not reachable")
+                }
+            }
+            const tokenAddresses1 = tokenAddresses.slice(1, 150);
+            const tokenAddresses2 = tokenAddresses.slice(151, 300);
+            //raw batch call in hook:
+            let addressesString1 = '';
+            tokenAddresses1.forEach(el => {
+                addressesString1 = addressesString1 + el + ','
+            })
 
-        let addressesString2 = '';
-        tokenAddresses2.forEach(el => {
-            addressesString2 = addressesString2 + el + ','})
+            getTokenPrices(addressesString1);
 
-        //getTokenPrices(addressesString2);
+            let addressesString2 = '';
+            tokenAddresses2.forEach(el => {
+                addressesString2 = addressesString2 + el + ','
+            })
+
+            //getTokenPrices(addressesString2);
         }
     }, [data]);
 
@@ -129,7 +141,7 @@ export function useBalancerTokens(): TokenData[] {
             priceChange = coingeckoData[token.address].usd_24h_change
         }
         const priceData24 = getTokenPriceValues(token.address, prices24);
-        
+
         //const priceData48 = getTokenPriceValues(token.address, prices48);
         const priceDataWeek = getTokenPriceValues(token.address, pricesWeek);
         const valueUSDCollected = 0;
@@ -177,29 +189,80 @@ export function useBalancerTokenPageData(address: string): {
             uri: activeNetwork.clientUri,
         },
     });
+    const [coingeckoSnapshotData, setCoingeckoSnapshotData] = useState<CoingeckoSnapshotPriceData>();
     const snapshots = data?.tokenSnapshots || [];
 
+
+    useEffect(() => {
+        //V2: repopulate formatted token data with coingecko data
+        if (snapshots && snapshots.length > 0) {
+            const fromTimestamp = snapshots[0].timestamp;
+            const toTimestamp = snapshots[snapshots.length - 1].timestamp;
+            const getTokenSnapshotData = async (address: string, fromTimestamp: number, toTimestamp: number) => {
+                const baseURI = 'https://api.coingecko.com/api/v3/coins/';
+                const queryParams = activeNetwork.coingeckoId + '/contract/' + address + '/market_chart/range?vs_currency=usd&from=' + fromTimestamp.toString() + '&to=' + toTimestamp.toString();
+                //console.log("api path: ", baseURI + queryParams);
+                try {
+                    const coingeckoResponse = await fetch(baseURI + queryParams);
+                    //console.log("response", coingeckoResponse)
+                    const json = await coingeckoResponse.json();
+                    //console.log("coingeckosnapshots json", json);
+                    //TODO: find way to append to interface object?
+                    setCoingeckoSnapshotData(json);
+                } catch {
+                    console.log("Coingecko: market_chart API not reachable")
+                }
+
+            }
+            getTokenSnapshotData(address, fromTimestamp, toTimestamp);
+        }
+    }, [snapshots]);
+
+
     const tvlData = snapshots.map((snapshot) => {
+        const coingeckoPrice = coingeckoSnapshotData?.prices.find(s => s[0] === snapshot.timestamp * 1000);
+        let coingeckoValue = 0;
+        if (coingeckoPrice) {
+            coingeckoValue = Number(snapshot.totalBalanceNotional) * coingeckoPrice[1];
+        }
         const value = parseFloat(snapshot.totalBalanceUSD);
         return {
-            value: value > 0 ? value : 0,
+            value: coingeckoValue > 0 ? coingeckoValue : value,
             time: unixToDate(snapshot.timestamp),
         };
     });
 
     const volumeData = snapshots.map((snapshot, idx) => {
+
+        const coingeckoPrevPrice = coingeckoSnapshotData?.prices.find(s => idx === 0 ? 0 : s[0] === snapshots[idx-1].timestamp * 1000);
+        let coingeckoPrevVolValue = 0;
+        if (coingeckoPrevPrice) {
+            coingeckoPrevVolValue = idx === 0 ? 0 : Number(snapshots[idx - 1].totalVolumeNotional) * coingeckoPrevPrice[1];
+        }
+        const coingeckoPrice = coingeckoSnapshotData?.prices.find(s => s[0] === snapshot.timestamp * 1000);
+        let coingeckoVolValue = 0;
+        if (coingeckoPrice) {
+            coingeckoVolValue = Number(snapshot.totalVolumeNotional) * coingeckoPrice[1];
+        }
+        const coingeckoDelta = coingeckoVolValue - coingeckoPrevVolValue > 0 ? coingeckoVolValue - coingeckoPrevVolValue : 0;
+
         const prevValue = idx === 0 ? 0 : parseFloat(snapshots[idx - 1].totalVolumeUSD);
         const value = parseFloat(snapshot.totalVolumeUSD);
 
         return {
-            value: value - prevValue > 0 ? value - prevValue : 0,
+            value: coingeckoDelta > 0 ? coingeckoDelta : 0,
             time: unixToDate(snapshot.timestamp),
         };
     });
 
     const priceData = snapshots.map((snapshot) => {
+        const coingeckoPrice = coingeckoSnapshotData?.prices.find(s => s[0] === snapshot.timestamp * 1000);
+        let coingeckoValue = 0;
+        if (coingeckoPrice) {
+            coingeckoValue = coingeckoPrice[1];
+        }
         return {
-            value: parseFloat(snapshot.totalBalanceUSD) / parseFloat(snapshot.totalBalanceNotional),
+            value: coingeckoValue,
             time: unixToDate(snapshot.timestamp),
         };
     });

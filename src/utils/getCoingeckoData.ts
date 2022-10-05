@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useActiveNetworkVersion } from "state/application/hooks";
 
-//Coingecko Interface
+//Coingecko Historical Interface
 export interface CoingeckoRawData {
     prices: number[][];
     market_caps: number[][];
