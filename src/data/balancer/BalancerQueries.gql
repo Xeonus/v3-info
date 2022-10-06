@@ -37,7 +37,7 @@ query GetProtocolData($startTimestamp: Int!, $block24: Block_height!, $block48: 
 query GetTokenData($block24: Block_height!, $blockWeek: Block_height!) {
     tokens: tokens(
         first: 1000
-        orderBy: totalVolumeUSD
+        orderBy: totalBalanceUSD
         orderDirection: desc
     ) {
         ...BalancerToken
@@ -49,7 +49,7 @@ query GetTokenData($block24: Block_height!, $blockWeek: Block_height!) {
     }
     tokens24: tokens(
         first: 1000
-        orderBy: totalVolumeUSD
+        orderBy: totalBalanceUSD
         orderDirection: desc,
         block: $block24
     ) {
@@ -63,7 +63,7 @@ query GetTokenData($block24: Block_height!, $blockWeek: Block_height!) {
     }
     tokensWeek: tokens(
         first: 1000
-        orderBy: totalVolumeUSD
+        orderBy: totalBalanceUSD
         orderDirection: desc,
         block: $blockWeek
     ) {
@@ -167,6 +167,9 @@ query GetPoolChartData($poolId: String!, $startTimestamp: Int!) {
         holdersCount
         pool {
             id
+            tokens {
+              address
+            }
         }
     }
 }

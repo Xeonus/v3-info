@@ -4234,7 +4234,11 @@ export type GetPoolChartDataQuery = {
         timestamp: number;
         swapsCount: string;
         holdersCount: string;
-        pool: { __typename: 'Pool'; id: string };
+        pool: {
+            __typename: 'Pool';
+            id: string;
+            tokens?: Array<{ __typename: 'PoolToken'; address: string }> | null | undefined;
+        };
     }>;
 };
 
@@ -5330,19 +5334,19 @@ export type GetProtocolDataLazyQueryHookResult = ReturnType<typeof useGetProtoco
 export type GetProtocolDataQueryResult = Apollo.QueryResult<GetProtocolDataQuery, GetProtocolDataQueryVariables>;
 export const GetTokenDataDocument = gql`
     query GetTokenData($block24: Block_height!, $blockWeek: Block_height!) {
-        tokens: tokens(first: 1000, orderBy: totalVolumeUSD, orderDirection: desc) {
+        tokens: tokens(first: 1000, orderBy: totalBalanceUSD, orderDirection: desc) {
             ...BalancerToken
         }
         prices: latestPrices(first: 1000) {
             ...LatestPrice
         }
-        tokens24: tokens(first: 1000, orderBy: totalVolumeUSD, orderDirection: desc, block: $block24) {
+        tokens24: tokens(first: 1000, orderBy: totalBalanceUSD, orderDirection: desc, block: $block24) {
             ...BalancerToken
         }
         prices24: latestPrices(first: 1000, block: $block24) {
             ...LatestPrice
         }
-        tokensWeek: tokens(first: 1000, orderBy: totalVolumeUSD, orderDirection: desc, block: $blockWeek) {
+        tokensWeek: tokens(first: 1000, orderBy: totalBalanceUSD, orderDirection: desc, block: $blockWeek) {
             ...BalancerToken
         }
         pricesWeek: latestPrices(first: 1000, block: $blockWeek) {
@@ -5637,6 +5641,9 @@ export const GetPoolChartDataDocument = gql`
             holdersCount
             pool {
                 id
+                tokens {
+                    address
+                }
             }
         }
     }

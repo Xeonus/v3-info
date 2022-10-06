@@ -9,9 +9,10 @@ import {
 import { useActiveNetworkVersion } from 'state/application/hooks';
 import { useDeltaTimestamps } from '../../utils/queries';
 import { useBlocksFromTimestamps } from '../../hooks/useBlocksFromTimestamps';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { unixToDate } from '../../utils/date';
-import { BalancerChartDataItem, PoolData } from './balancerTypes';
+import { BalancerChartDataItem, PoolData, PoolTokenData } from './balancerTypes';
+import { CoingeckoRawData, CoingeckoSnapshotPriceData } from './useTokens';
 
 function getPoolValues(
     poolId: string,
@@ -28,6 +29,8 @@ function getPoolValues(
     if (!pool) {
         return { tvl: 0, volume: 0, swapCount: 0, fees: 0 , feesEpoch: 0, poolType: ''};
     }
+
+    //console.log("pool", pool);
 
     return {
         tvl: parseFloat(pool.totalLiquidity),
@@ -189,25 +192,70 @@ export function useBalancerPoolPageData(poolId: string): {
     feesData: BalancerChartDataItem[];
 } {
     const [activeNetwork] = useActiveNetworkVersion();
+    const [coingeckoSnapshotData, setCoingeckoSnapshotData] = useState<{tokenAddress: string, coingeckoRawData: CoingeckoSnapshotPriceData}[]>([]);
     const { data } = useGetPoolChartDataQuery({
         variables: { poolId, startTimestamp: activeNetwork.startTimeStamp },
         context: {
             uri: activeNetwork.clientUri,
         },
     });
+
+    useEffect(() => {
+        //V2: repopulate formatted token data with coingecko data
+        if (data && data.poolSnapshots && data.poolSnapshots.length > 1) {
+            const fromTimestamp = data.poolSnapshots[0].timestamp;
+            const toTimestamp = data.poolSnapshots[data.poolSnapshots.length - 1].timestamp;
+            const getTokenSnapshotData = async (address: string, fromTimestamp: number, toTimestamp: number) => {
+                const baseURI = 'https://api.coingecko.com/api/v3/coins/';
+                const queryParams = activeNetwork.coingeckoId + '/contract/' + address + '/market_chart/range?vs_currency=usd&from=' + fromTimestamp.toString() + '&to=' + toTimestamp.toString();
+                try {
+                    const coingeckoResponse = await fetch(baseURI + queryParams);
+                    const json = await coingeckoResponse.json();
+                    setCoingeckoSnapshotData(coingeckoSnapshotData => [
+                        ...coingeckoSnapshotData,
+                        {tokenAddress: address,
+                        coingeckoRawData: json,}
+                    ]);
+                } catch {
+                    console.log("Coingecko: market_chart API not reachable")
+                }
+            }
+            if (data.poolSnapshots[0].pool.tokens) {
+                data.poolSnapshots[0].pool.tokens.forEach(poolToken => {
+                    getTokenSnapshotData(poolToken.address, fromTimestamp, toTimestamp);
+                })
+            }
+            
+        }
+    }, [data]);
+
+
     if (!data) {
         return { tvlData: [], volumeData: [], feesData: [] };
     }
 
     const { poolSnapshots } = data;
 
-    console.log("usePools data", data);
     
-
-    const tvlData = poolSnapshots.map((snapshot) => ({
-        value: parseFloat(snapshot.swapVolume),
-        time: unixToDate(snapshot.timestamp),
-    }));
+    
+    //TODO: verify if token order is the same for the snapshot and pooltoken queries!
+    const tvlData = poolSnapshots.map((snapshot) => {
+        let coingeckoValue = 0;
+        if (coingeckoSnapshotData && coingeckoSnapshotData[0]) {
+            for (let i=0; i<= coingeckoSnapshotData.length-1; i++) {
+                if (coingeckoSnapshotData[i].coingeckoRawData.prices) {
+                const price = coingeckoSnapshotData[i].coingeckoRawData.prices.find(s => s[0] === snapshot.timestamp * 1000);
+                if (price) {
+                    coingeckoValue += parseFloat(snapshot.amounts[i]) * price[1];
+                }
+                }
+            }
+        }
+        return {
+            value: coingeckoValue> 0 ? coingeckoValue : parseFloat(snapshot.swapVolume),
+            time: unixToDate(snapshot.timestamp),
+        }
+    });
 
     const volumeData = poolSnapshots.map((snapshot, idx) => {
         const prevValue = idx === 0 ? 0 : parseFloat(poolSnapshots[idx - 1].swapVolume);

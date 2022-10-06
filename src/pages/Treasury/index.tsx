@@ -146,11 +146,11 @@ export default function Treasury() {
     const poolData = useBalancerPools();
     const formattedTokens = useBalancerTokens();
     //Add USDC if it is not in the token list! -> TODO: Refactor balancer subgraph token list dependecy!!
-    const usdToken = {} as TokenData;
-    usdToken.address = usdcAddress;
-    usdToken.symbol = 'USDC';
-    usdToken.name = 'USDC';
-    formattedTokens.push(usdToken);
+    //const usdToken = {} as TokenData;
+    //usdToken.address = usdcAddress;
+    //usdToken.symbol = 'USDC';
+    //usdToken.name = 'USDC';
+    //formattedTokens.push(usdToken);
     const userPools = useUserPools(TREASURY_CONFIG.treasury);
     const walletTokenData = GetAddressTokenBalances(TREASURY_CONFIG.treasury);
     const historicalCollectorData = useHistoricalWalletData(TREASURY_CONFIG.treasury, [bbaUsdAddress]);

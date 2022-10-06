@@ -98,6 +98,8 @@ export default function PoolPage({
     const theme = useTheme();
 
     const poolData = useBalancerPoolData(poolId);
+
+    //console.log("poolData", poolData);
     
     const { tvlData, volumeData, feesData } = useBalancerPoolPageData(poolId);
 
