@@ -45,7 +45,7 @@ query GetTokenData($block24: Block_height!, $blockWeek: Block_height!) {
     prices: latestPrices(
         first: 1000
     ) {
-        ...LatestPrice
+        ...LatestPriceg
     }
     tokens24: tokens(
         first: 1000

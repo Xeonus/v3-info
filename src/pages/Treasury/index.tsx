@@ -48,6 +48,8 @@ import getCuratedTokenName from 'utils/getCuratedTokenName';
 import getCuratedAssetData from 'utils/getCuratedAssetData';
 import { getShortPoolName } from "utils/getShortPoolName";
 import TreasuryAssetTable from 'components/assets/TreasuryAssetsTable';
+import EchartsPieChart from 'components/PieChart/EchartsPieChart';
+import { echartsData, Normal, ItemStyle } from 'components/PieChart/EchartsPieChart';
 
 
 
@@ -271,7 +273,7 @@ export default function Treasury() {
             isEmptyTokenSet = true;
         }
     }
-
+    const echartsDataArray: echartsData[] = [];
     //Create pie chart
     const pieChartData: any[] = [];
     //Token holdings
@@ -286,9 +288,18 @@ export default function Treasury() {
             entry.value = rawTokenData[key];
             entry.fill = getChartColor(key, 1);
             pieChartData.push(entry);
+            const echartsData = {} as echartsData;
+            //echartsData.itemStyle = {} as ItemStyle;
+            //echartsData.itemStyle.normal = {} as Normal;
+            //echartsData.itemStyle.normal.color = entry.fill;
+            echartsData.name = key;
+            echartsData.value = rawTokenData[key];
+            echartsDataArray.push(echartsData);
         }
-
     }
+
+    //console.log("echartsDataArray", echartsDataArray);
+
 
     //Alternative pie chart data
     const cumulativePieChartData: any[] = [];
@@ -304,6 +315,13 @@ export default function Treasury() {
             entry.value = bpt.userTVL;
             entry.fill = getChartColor(bpt.symbol, Math.round(Math.random() * 10));
             cumulativePieChartData.push(entry);
+            const echartsData = {} as echartsData;
+            //echartsData.itemStyle = {} as ItemStyle;
+            //echartsData.itemStyle.normal = {} as Normal;
+            //echartsData.itemStyle.normal.color = entry.fill;
+            echartsData.name = shortName;
+            echartsData.value = bpt.userTVL;
+            echartsDataArray.push(echartsData);
         });
         //Other positions
         curatedInvestmentTokenDatas.forEach((token) => {
@@ -312,7 +330,17 @@ export default function Treasury() {
             entry.value = token.valueUSDCollected;
             entry.fill = getChartColor(token.symbol, 1);
             cumulativePieChartData.push(entry);
+            const echartsData = {} as echartsData;
+            //echartsData.itemStyle = {} as ItemStyle;
+            //echartsData.itemStyle.normal = {} as Normal;
+            //echartsData.itemStyle.normal.color = entry.fill;
+            echartsData.name = entry.name;
+            echartsData.value = token.valueUSDCollected;
+            echartsDataArray.push(echartsData);
         });
+
+    //console.log("cumulativePieChart", cumulativePieChartData);
+
 
     //---REVENUE STREAM estimates
     let dailyRevenue = 0;
@@ -468,19 +496,14 @@ export default function Treasury() {
                     <TYPE.main fontWeight={400}>Total Asset Net Worth</TYPE.main>
                     <TYPE.label fontSize="24px">{formatDollarAmount(netWorth)}</TYPE.label>
                 </AutoColumn>
-                {tokenSet.length > 0 && cumulativePieChartData && historicalCollectorData?.tvl ?
-                        <BalPieChart
-                            data={cumulativePieChartData}
-                            tokenSet={tokenSet}
-                            cxcy={['45%', '55%']}
-                            height={400}
-                            minHeight={400}
-                        /> : <AutoColumn gap="lg" justify='flex-start'>
+                {tokenSet.length > 0 && cumulativePieChartData && historicalCollectorData?.tvl && echartsDataArray.length > 0 ?
+                        <EchartsPieChart data={echartsDataArray}></EchartsPieChart> : <AutoColumn gap="lg" justify='flex-start'>
                             <DarkGreyCard>
                                 <TYPE.main fontSize="18px">Calculating asset distribution...</TYPE.main>
                                 <LocalLoader fill={false} />
                             </DarkGreyCard> </ AutoColumn>}
                 </DarkGreyCard>
+                
                 </ContentLayoutRight>
                 <TYPE.white> Tokens in treasury wallet </TYPE.white>
                 <ContentLayout>
