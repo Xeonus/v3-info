@@ -89,7 +89,7 @@ const DataRow = ({ transaction, color }: { transaction: BalancerJoinExitFragment
                 </Label>
             </ExternalLink>
             <Label end={1} fontWeight={400}>
-                {formatDollarAmount(parseFloat(transaction.valueUSD))}
+                {formatDollarAmount(parseFloat(transaction.valueUSD ? transaction.valueUSD : '0'))}
             </Label>
 
             <Label end={1} fontWeight={400}>
@@ -140,7 +140,7 @@ export default function JoinExitTable({
             ? transactions
                   .slice()
                   .sort((a, b) => {
-                      if (a && b) {
+                      if (a && b && sortField as keyof BalancerJoinExitFragment !== null && sortField as keyof BalancerJoinExitFragment !== undefined) {
                           return a[sortField as keyof BalancerJoinExitFragment] >
                               b[sortField as keyof BalancerJoinExitFragment]
                               ? (sortDirection ? -1 : 1) * 1

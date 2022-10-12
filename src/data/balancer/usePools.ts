@@ -26,7 +26,7 @@ function getPoolValues(
     epochFees = feeData.swapFee;
     }
 
-    if (!pool) {
+    if (!pool || pool.poolType === 'AaveLinear') {
         return { tvl: 0, volume: 0, swapCount: 0, fees: 0 , feesEpoch: 0, poolType: ''};
     }
 
@@ -130,6 +130,7 @@ export function useBalancerPools(): PoolData[] {
                 const weight = token.weight ? parseFloat(token.weight) : 0;
                 const tokenPrice = prices.find((price) => price.asset === token.address);
                 const price = tokenPrice ? parseFloat(tokenPrice.price) : 0;
+                const balance = parseFloat(token.balance);
 
                 return {
                     ...token,
@@ -138,6 +139,7 @@ export function useBalancerPools(): PoolData[] {
                     price,
                     tvl: parseFloat(token.balance) * price,
                     weight,
+                    balance,
                 };
             }),
             liquidity: poolData.tvl,
@@ -177,6 +179,11 @@ export function useBalancerPoolData(poolId: string): PoolData | null {
     const pools = useBalancerPools();
     const pool = pools.find((pool) => pool.id === poolId);
 
+    if (pool && pool.poolType === 'ComposableStable') {
+        //remove Composable factory boosted token:
+        pool.tokens = pool.tokens.filter((tokens) => tokens.balance < 2596140000000000)
+        }
+
     return pool || null;
 }
 
@@ -208,14 +215,18 @@ export function useBalancerPoolPageData(poolId: string): {
             const getTokenSnapshotData = async (address: string, fromTimestamp: number, toTimestamp: number) => {
                 const baseURI = 'https://api.coingecko.com/api/v3/coins/';
                 const queryParams = activeNetwork.coingeckoId + '/contract/' + address + '/market_chart/range?vs_currency=usd&from=' + fromTimestamp.toString() + '&to=' + toTimestamp.toString();
+                
                 try {
                     const coingeckoResponse = await fetch(baseURI + queryParams);
-                    const json = await coingeckoResponse.json();
-                    setCoingeckoSnapshotData(coingeckoSnapshotData => [
-                        ...coingeckoSnapshotData,
-                        {tokenAddress: address,
-                        coingeckoRawData: json,}
-                    ]);
+                    const hit = coingeckoSnapshotData.find(el => el.tokenAddress === address);
+                    if (hit == null) {
+                        const json = await coingeckoResponse.json();
+                        setCoingeckoSnapshotData(coingeckoSnapshotData => [
+                            ...coingeckoSnapshotData,
+                            {tokenAddress: address,
+                            coingeckoRawData: json,}
+                        ]);
+                }
                 } catch {
                     console.log("Coingecko: market_chart API not reachable")
                 }
@@ -238,15 +249,31 @@ export function useBalancerPoolPageData(poolId: string): {
 
     
     
-    //TODO: verify if token order is the same for the snapshot and pooltoken queries!
     const tvlData = poolSnapshots.map((snapshot) => {
         let coingeckoValue = 0;
-        if (coingeckoSnapshotData && coingeckoSnapshotData[0]) {
+        if (coingeckoSnapshotData && coingeckoSnapshotData.length === poolSnapshots[0].pool.tokens?.length) {
+            //Map token index from poolSnapshot to coingeckoRawData
             for (let i=0; i<= coingeckoSnapshotData.length-1; i++) {
                 if (coingeckoSnapshotData[i].coingeckoRawData.prices) {
-                const price = coingeckoSnapshotData[i].coingeckoRawData.prices.find(s => s[0] === snapshot.timestamp * 1000);
-                if (price) {
-                    coingeckoValue += parseFloat(snapshot.amounts[i]) * price[1];
+                    const snapshotTokenIndex = poolSnapshots[0].pool.tokens?.findIndex(s => s.address === coingeckoSnapshotData[i].tokenAddress);
+                    //Range < 90d -> hourly rate -> approximate closest timestamp
+                    let timestamp = snapshot.timestamp * 1000;
+                    if (poolSnapshots.length < 90) {
+                        const rawData = coingeckoSnapshotData[i].coingeckoRawData.prices;
+                        const match = rawData.reduce(function(prev, curr) {
+                            return (Math.abs(curr[0] - timestamp) < Math.abs(prev[0] - timestamp) ? curr : prev);
+                          });
+                          if (match) {
+                            timestamp = match[0];
+                          }
+                    }
+                    const price = coingeckoSnapshotData[i].coingeckoRawData.prices.find(s => s[0] === timestamp);
+                if (price && snapshotTokenIndex !== null) {
+                    const usdWorth = parseFloat(snapshot.amounts[snapshotTokenIndex]) * price[1];
+                    //TODO: properly filter bb-a tokens
+                    if (usdWorth < 1000000000) {
+                        coingeckoValue = coingeckoValue + parseFloat(snapshot.amounts[snapshotTokenIndex]) * price[1];
+                    }
                 }
                 }
             }

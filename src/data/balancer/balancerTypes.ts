@@ -37,6 +37,7 @@ export type TokenData = {
 export interface PoolTokenData {
     name: string;
     symbol: string;
+    balance: number;
     address: string;
     decimals: number;
     derivedETH: number;

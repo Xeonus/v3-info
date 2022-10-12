@@ -910,6 +910,9 @@ export interface Pool {
     poolTypeVersion?: Maybe<Scalars['Int']>;
     priceRateProviders?: Maybe<Array<PriceRateProvider>>;
     principalToken?: Maybe<Scalars['Bytes']>;
+    protocolAumFeeCache?: Maybe<Scalars['BigDecimal']>;
+    protocolSwapFeeCache?: Maybe<Scalars['BigDecimal']>;
+    protocolYieldFeeCache?: Maybe<Scalars['BigDecimal']>;
     root3Alpha?: Maybe<Scalars['BigDecimal']>;
     s?: Maybe<Scalars['BigDecimal']>;
     shares?: Maybe<Array<PoolShare>>;
@@ -1296,6 +1299,7 @@ export interface PoolToken {
     cashBalance: Scalars['BigDecimal'];
     decimals: Scalars['Int'];
     id: Scalars['ID'];
+    isExemptFromYieldProtocolFee?: Maybe<Scalars['Boolean']>;
     managedBalance: Scalars['BigDecimal'];
     managements?: Maybe<Array<ManagementOperation>>;
     name: Scalars['String'];
@@ -1375,6 +1379,10 @@ export interface PoolToken_Filter {
     id_lte?: Maybe<Scalars['ID']>;
     id_not?: Maybe<Scalars['ID']>;
     id_not_in?: Maybe<Array<Scalars['ID']>>;
+    isExemptFromYieldProtocolFee?: Maybe<Scalars['Boolean']>;
+    isExemptFromYieldProtocolFee_in?: Maybe<Array<Scalars['Boolean']>>;
+    isExemptFromYieldProtocolFee_not?: Maybe<Scalars['Boolean']>;
+    isExemptFromYieldProtocolFee_not_in?: Maybe<Array<Scalars['Boolean']>>;
     managedBalance?: Maybe<Scalars['BigDecimal']>;
     managedBalance_gt?: Maybe<Scalars['BigDecimal']>;
     managedBalance_gte?: Maybe<Scalars['BigDecimal']>;
@@ -1491,6 +1499,7 @@ export type PoolToken_OrderBy =
     | 'cashBalance'
     | 'decimals'
     | 'id'
+    | 'isExemptFromYieldProtocolFee'
     | 'managedBalance'
     | 'managements'
     | 'name'
@@ -1691,6 +1700,30 @@ export interface Pool_Filter {
     principalToken_not?: Maybe<Scalars['Bytes']>;
     principalToken_not_contains?: Maybe<Scalars['Bytes']>;
     principalToken_not_in?: Maybe<Array<Scalars['Bytes']>>;
+    protocolAumFeeCache?: Maybe<Scalars['BigDecimal']>;
+    protocolAumFeeCache_gt?: Maybe<Scalars['BigDecimal']>;
+    protocolAumFeeCache_gte?: Maybe<Scalars['BigDecimal']>;
+    protocolAumFeeCache_in?: Maybe<Array<Scalars['BigDecimal']>>;
+    protocolAumFeeCache_lt?: Maybe<Scalars['BigDecimal']>;
+    protocolAumFeeCache_lte?: Maybe<Scalars['BigDecimal']>;
+    protocolAumFeeCache_not?: Maybe<Scalars['BigDecimal']>;
+    protocolAumFeeCache_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
+    protocolSwapFeeCache?: Maybe<Scalars['BigDecimal']>;
+    protocolSwapFeeCache_gt?: Maybe<Scalars['BigDecimal']>;
+    protocolSwapFeeCache_gte?: Maybe<Scalars['BigDecimal']>;
+    protocolSwapFeeCache_in?: Maybe<Array<Scalars['BigDecimal']>>;
+    protocolSwapFeeCache_lt?: Maybe<Scalars['BigDecimal']>;
+    protocolSwapFeeCache_lte?: Maybe<Scalars['BigDecimal']>;
+    protocolSwapFeeCache_not?: Maybe<Scalars['BigDecimal']>;
+    protocolSwapFeeCache_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
+    protocolYieldFeeCache?: Maybe<Scalars['BigDecimal']>;
+    protocolYieldFeeCache_gt?: Maybe<Scalars['BigDecimal']>;
+    protocolYieldFeeCache_gte?: Maybe<Scalars['BigDecimal']>;
+    protocolYieldFeeCache_in?: Maybe<Array<Scalars['BigDecimal']>>;
+    protocolYieldFeeCache_lt?: Maybe<Scalars['BigDecimal']>;
+    protocolYieldFeeCache_lte?: Maybe<Scalars['BigDecimal']>;
+    protocolYieldFeeCache_not?: Maybe<Scalars['BigDecimal']>;
+    protocolYieldFeeCache_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
     root3Alpha?: Maybe<Scalars['BigDecimal']>;
     root3Alpha_gt?: Maybe<Scalars['BigDecimal']>;
     root3Alpha_gte?: Maybe<Scalars['BigDecimal']>;
@@ -1964,6 +1997,9 @@ export type Pool_OrderBy =
     | 'poolTypeVersion'
     | 'priceRateProviders'
     | 'principalToken'
+    | 'protocolAumFeeCache'
+    | 'protocolSwapFeeCache'
+    | 'protocolYieldFeeCache'
     | 'root3Alpha'
     | 's'
     | 'shares'
@@ -3860,6 +3896,7 @@ export type GetProtocolDataQuery = {
         tokenOutSym: string;
         tokenAmountIn: string;
         tokenAmountOut: string;
+        valueUSD: string;
         timestamp: number;
         tx: string;
         poolId: { __typename: 'Pool'; id: string; name?: string | null | undefined; address: string; swapFee: string };
@@ -4003,6 +4040,7 @@ export type GetTransactionDataQuery = {
         tokenOutSym: string;
         tokenAmountIn: string;
         tokenAmountOut: string;
+        valueUSD: string;
         timestamp: number;
         tx: string;
         poolId: { __typename: 'Pool'; id: string; name?: string | null | undefined; address: string; swapFee: string };
@@ -4018,6 +4056,7 @@ export type GetTransactionDataQuery = {
         tokenOutSym: string;
         tokenAmountIn: string;
         tokenAmountOut: string;
+        valueUSD: string;
         timestamp: number;
         tx: string;
         poolId: { __typename: 'Pool'; id: string; name?: string | null | undefined; address: string; swapFee: string };
@@ -4026,6 +4065,7 @@ export type GetTransactionDataQuery = {
     joinExits: Array<{
         __typename: 'JoinExit';
         amounts: Array<string>;
+        valueUSD?: string | null | undefined;
         id: string;
         sender: string;
         timestamp: number;
@@ -4660,6 +4700,7 @@ export type BalancerJoinExitsQuery = {
     joinExits: Array<{
         __typename: 'JoinExit';
         amounts: Array<string>;
+        valueUSD?: string | null | undefined;
         id: string;
         sender: string;
         timestamp: number;
@@ -4673,6 +4714,7 @@ export type BalancerJoinExitsQuery = {
 export type BalancerJoinExitFragment = {
     __typename: 'JoinExit';
     amounts: Array<string>;
+    valueUSD?: string | null | undefined;
     id: string;
     sender: string;
     timestamp: number;
@@ -4804,6 +4846,7 @@ export type BalancerSwapsQuery = {
         tokenOutSym: string;
         tokenAmountIn: string;
         tokenAmountOut: string;
+        valueUSD: string;
         timestamp: number;
         tx: string;
         poolId: { __typename: 'Pool'; id: string; name?: string | null | undefined; address: string; swapFee: string };
@@ -4821,6 +4864,7 @@ export type BalancerSwapFragment = {
     tokenOutSym: string;
     tokenAmountIn: string;
     tokenAmountOut: string;
+    valueUSD: string;
     timestamp: number;
     tx: string;
     poolId: { __typename: 'Pool'; id: string; name?: string | null | undefined; address: string; swapFee: string };
@@ -5176,6 +5220,7 @@ export const BalancerPoolSnapshotFragmentDoc = gql`
 export const BalancerJoinExitFragmentDoc = gql`
     fragment BalancerJoinExit on JoinExit {
         amounts
+        valueUSD
         id
         sender
         timestamp
@@ -5200,6 +5245,7 @@ export const BalancerSwapFragmentDoc = gql`
         tokenOutSym
         tokenAmountIn
         tokenAmountOut
+        valueUSD
         poolId {
             id
             name

@@ -45,7 +45,7 @@ query GetTokenData($block24: Block_height!, $blockWeek: Block_height!) {
     prices: latestPrices(
         first: 1000
     ) {
-        ...LatestPriceg
+        ...LatestPrice
     }
     tokens24: tokens(
         first: 1000
@@ -552,6 +552,7 @@ query BalancerJoinExits(
 
 fragment BalancerJoinExit on JoinExit {
     amounts
+    valueUSD
     id
     sender
     timestamp
@@ -612,6 +613,7 @@ fragment BalancerSwap on Swap {
     tokenOutSym
     tokenAmountIn
     tokenAmountOut
+    valueUSD
     poolId {
         id
         name
@@ -652,7 +654,6 @@ fragment BalancerToken on Token {
     decimals
     name
     symbol
-
     totalBalanceUSD
     totalBalanceNotional
     totalVolumeUSD

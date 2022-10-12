@@ -130,14 +130,6 @@ export default function App() {
             ) : (
                 <AppWrapper>
                     <HeaderWrapper>
-                        {activeNetwork.id === SupportedNetwork.POLYGON && (
-                            <WarningWrapper>
-                                <WarningBanner>
-                                    {`Warning: 
-                  Data fetching for this chain requires long loading times - Please be patient.`}
-                                </WarningBanner>
-                            </WarningWrapper>
-                        )}
                         <Hide1080>
                             <TopBar />
                         </Hide1080>

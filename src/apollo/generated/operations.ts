@@ -109,6 +109,7 @@ export const BalancerPoolSnapshot = gql`
 export const BalancerJoinExit = gql`
     fragment BalancerJoinExit on JoinExit {
         amounts
+        valueUSD
         id
         sender
         timestamp
@@ -133,6 +134,7 @@ export const BalancerSwap = gql`
         tokenOutSym
         tokenAmountIn
         tokenAmountOut
+        valueUSD
         poolId {
             id
             name

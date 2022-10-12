@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ScrollableX, GreyCard, GreyBadge } from 'components/Card';
 import Loader from 'components/Loader';
@@ -12,6 +12,7 @@ import HoverInlineText from 'components/HoverInlineText';
 import { feeTierPercent } from 'utils';
 import { PoolData } from '../../data/balancer/balancerTypes';
 import { useBalancerPools } from '../../data/balancer/usePools';
+import { ScrollableRow } from 'components/tokens/TopTokenMovers';
 
 const Container = styled(StyledInternalLink)`
     min-width: 210px;
@@ -40,9 +41,6 @@ const DataCard = ({ poolData }: { poolData: PoolData }) => {
                                 text={`${poolData.tokens[0].symbol}/${poolData.tokens[1].symbol}`}
                             />
                         </TYPE.label>
-                        <GreyBadge ml="10px" fontSize="12px">
-                            {feeTierPercent(poolData.feeTier)}
-                        </GreyBadge>
                     </RowFixed>
                     <RowFixed>
                         <TYPE.label mr="6px">{formatDollarAmount(poolData.volumeUSD)}</TYPE.label>
@@ -54,26 +52,36 @@ const DataCard = ({ poolData }: { poolData: PoolData }) => {
     );
 };
 
-export default function TopPoolMovers() {
-    const allPools = useBalancerPools();
+export default function TopPoolMovers({ allPools }: { allPools: PoolData[] }) {
 
-    const topVolume = useMemo(() => {
-        return Object.values(allPools)
-            .sort((a, b) => {
-                return a && b ? (a?.volumeUSDChange > b?.volumeUSDChange ? -1 : 1) : -1;
-            })
-            .slice(0, Math.min(20, Object.values(allPools).length));
-    }, [allPools]);
+    const topVolume = allPools
+        .sort((a, b) => {
+            return a && b ? (a?.volumeUSD > b?.volumeUSD ? -1 : 1) : -1;
+        })
+        .slice(0, Math.min(20, Object.values(allPools).length));
 
-    if (Object.keys(allPools).length === 0) {
-        return <Loader />;
-    }
+
+    const increaseRef = useRef<HTMLDivElement>(null);
+    const [increaseSet, setIncreaseSet] = useState(false);
+    // const [pauseAnimation, setPauseAnimation] = useState(false)
+    // const [resetInterval, setClearInterval] = useState<() => void | undefined>()
+
+    useEffect(() => {
+        if (!increaseSet && increaseRef && increaseRef.current) {
+            setInterval(() => {
+                if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
+                    increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0);
+                }
+            }, 30);
+            setIncreaseSet(true);
+        }
+    }, [increaseRef, increaseSet]);
 
     return (
-        <ScrollableX>
+        <ScrollableRow ref={increaseRef}>
             {topVolume.map((entry) =>
                 entry ? <DataCard key={'top-card-pool-' + entry.address} poolData={entry} /> : null,
             )}
-        </ScrollableX>
+        </ScrollableRow>
     );
 }

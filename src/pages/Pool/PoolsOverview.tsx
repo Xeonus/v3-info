@@ -6,7 +6,8 @@ import PoolTable from 'components/pools/PoolTable';
 import { useSavedPools } from 'state/user/hooks';
 import { DarkGreyCard } from 'components/Card';
 import { useBalancerPools } from '../../data/balancer/usePools';
-// import TopPoolMovers from 'components/pools/TopPoolMovers'
+import TopPoolMovers from 'components/pools/TopPoolMovers'
+import { HideSmall } from 'theme';
 
 export default function PoolPage() {
     useEffect(() => {
@@ -29,14 +30,14 @@ export default function PoolPage() {
                         <TYPE.main>Saved pools will appear here</TYPE.main>
                     </DarkGreyCard>
                 )}
-                {/* <HideSmall>
+                <HideSmall>
           <DarkGreyCard style={{ paddingTop: '12px' }}>
             <AutoColumn gap="md">
               <TYPE.mediumHeader fontSize="16px">Trending by 24H Volume</TYPE.mediumHeader>
-              <TopPoolMovers />
+              <TopPoolMovers allPools={poolData}/>
             </AutoColumn>
           </DarkGreyCard>
-        </HideSmall> */}
+        </HideSmall>
                 <TYPE.main>All Pools</TYPE.main>
                 <PoolTable poolDatas={poolData} />
             </AutoColumn>
