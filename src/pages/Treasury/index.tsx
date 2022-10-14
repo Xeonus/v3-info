@@ -274,6 +274,7 @@ export default function Treasury() {
         }
     }
     const echartsDataArray: echartsData[] = [];
+    const echartsTokenArray: echartsData[] = [];
     //Create pie chart
     const pieChartData: any[] = [];
     //Token holdings
@@ -295,6 +296,7 @@ export default function Treasury() {
             echartsData.name = key;
             echartsData.value = rawTokenData[key];
             echartsDataArray.push(echartsData);
+            echartsTokenArray.push(echartsData);
         }
     }
 
@@ -682,12 +684,8 @@ export default function Treasury() {
                     <TYPE.main fontWeight={400}>Token distribution</TYPE.main>
                 </AutoColumn>
                     {tokenSet.length > 0 && pieChartData && historicalCollectorData?.tvl ?
-                        <BalPieChart
-                            data={pieChartData}
-                            tokenSet={tokenSet}
-                            height={200}
-                            minHeight={400}
-                        /> : <AutoColumn gap="lg" justify='flex-start'>
+                        <EchartsPieChart 
+                            data={echartsTokenArray}></EchartsPieChart> : <AutoColumn gap="lg" justify='flex-start'>
                             <DarkGreyCard>
                                 <TYPE.main fontSize="18px">Fetching token distribution...</TYPE.main>
                                 <LocalLoader fill={false} />

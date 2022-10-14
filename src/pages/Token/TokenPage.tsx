@@ -111,7 +111,7 @@ export default function TokenPage({
      //console.log("chartData", chartData);
 
     // chart labels
-    const [view, setView] = useState(ChartView.VOL);
+    const [view, setView] = useState(ChartView.TVL);
     const [latestValue, setLatestValue] = useState<number | undefined>();
     const [valueLabel, setValueLabel] = useState<string | undefined>();
     const [timeWindow] = useState(DEFAULT_TIME_WINDOW);

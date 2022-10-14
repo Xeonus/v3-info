@@ -40,6 +40,11 @@ export interface echartsData {
     itemStyle: ItemStyle;
 }
 
+export interface ToolTipParams {
+  name: string;
+  data: echartsData;
+}
+
 
 export type EchartsProps = {
     data: echartsData[];
@@ -83,9 +88,15 @@ const style = {
     // {a} = series:[{name:}]
     // {b} = series:[{data: [{name:}]}]
     // {c} = series:[{data: [{value:}]
+    //formatter: "{a}<br/><strong>{b}</strong>: ${c}"
     tooltip: {
       trigger: "item",
-      formatter: "{a}<br/><strong>{b}</strong>: ${c}"
+      
+      formatter: function (params: ToolTipParams) {
+        return `
+               <b>${params.name}</b></br>
+              $ ${formatDollarAmount(params.data.value)} <br />`
+      }
     },
     calculable: true,
     legend: {

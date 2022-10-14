@@ -68,7 +68,7 @@ const ContentLayout = styled.div`
 
 //TODO: create utils function to get timestamps
 //Poolsnapshots are taken OO:OO UTC. Generate previous snapshot date and previous Tue. Used to calculate weekly sweep fee generators
-const target = 3 // Wednesday
+const target = 1 // Wednesday
 const prevDate = new Date();
 prevDate.setDate(prevDate.getDate() - (prevDate.getDay() == target ? 7 : (prevDate.getDay() + (7 - target)) % 7));
 prevDate.setUTCHours(0, 0, 0, 0);
@@ -87,7 +87,7 @@ export default function ProtocolFees() {
     const protocolData = useBalancerProtocolData();
     const formattedTokens = useBalancerTokens();
     const walletTokenData = GetAddressTokenBalances(FEE_COLLECTOR_ADDRESS);
-    const historicalCollectorData = useHistoricalWalletData(FEE_COLLECTOR_ADDRESS);
+    //const historicalCollectorData = useHistoricalWalletData(FEE_COLLECTOR_ADDRESS);
     const poolData = useBalancerPools();
     const debankLink = 'https://debank.com/profile/0xce88686553686da562ce7cea497ce749da109f9f';
     let balAddress = '0xba100000625a3754423978a60c9317c58a424e3d';
@@ -105,7 +105,7 @@ export default function ProtocolFees() {
         usdcAddress = '0x2791bca1f2de4661ed88a30c99a7a9449aa84174';
         sweepLimit = 5000;
     }
-
+    const covalentError = 'Wallet data could not be loaded. Covalent API unreachable';
     const [feesHover, setFeesHover] = useState<number | undefined>();
     const [feesLabel, setFeesLabel] = useState<string | undefined>();
     const [liquidityHover, setLiquidityHover] = useState<number | undefined>();
@@ -124,11 +124,11 @@ export default function ProtocolFees() {
         }
     }, [feesHover, protocolData]);
 
-    useEffect(() => {
-        if (liquidityHover === undefined && historicalCollectorData) {
-            setLiquidityHover(historicalCollectorData.tvl)
-        }
-    }, [liquidityHover, protocolData])
+    // useEffect(() => {
+    //     if (liquidityHover === undefined && historicalCollectorData) {
+    //         setLiquidityHover(historicalCollectorData.tvl)
+    //     }
+    // }, [liquidityHover, protocolData])
 
 
     function adjustFees(data: BalancerChartDataItem[] | undefined) {
@@ -176,10 +176,10 @@ export default function ProtocolFees() {
         });
     }
 
-    let dailyChange = 0;
-    if (historicalCollectorData?.totalValueData.length) {
-        dailyChange = historicalCollectorData.totalValueData[historicalCollectorData.totalValueData.length - 1].value - historicalCollectorData.totalValueData[historicalCollectorData.totalValueData.length - 2].value;
-    }
+    // let dailyChange = 0;
+    // if (historicalCollectorData?.totalValueData.length) {
+    //     dailyChange = historicalCollectorData.totalValueData[historicalCollectorData.totalValueData.length - 1].value - historicalCollectorData.totalValueData[historicalCollectorData.totalValueData.length - 2].value;
+    // }
 
     //TODO: fix edge case redundancy code here ( this happens right after a sweep):
     let isEmptySet = false;
@@ -251,7 +251,7 @@ export default function ProtocolFees() {
                             }
                         />
                     </ResponsiveRow> : <Loader />}
-                <ContentLayout>
+                {/* <ContentLayout>
                     {totalAmount > 0 && historicalCollectorData?.tvl ?
                         <DarkGreyCard>
                             <AutoColumn gap="lg">
@@ -435,15 +435,22 @@ export default function ProtocolFees() {
                                                 <TYPE.main>No tokens above threshold</TYPE.main>
                                             </DarkGreyCard>)}
                                 </ AutoColumn>)}
-                </ContentLayout>
-                {!isEmptySet ?
-                    <TYPE.main>Tokens to be swept</TYPE.main>
+                </ContentLayout> */}
+                
+                {walletTokenData?.error ?
+                <TYPE.yellow>{covalentError}</TYPE.yellow> : null }
+                {!isEmptySet && totalAmount && walletTokenData?.error === false ?
+                    <TYPE.main>Tokens to be swept - {formatDollarAmount(totalAmount)}</TYPE.main>
                     : null}
-                {!isEmptySet ?
+                {!isEmptySet && walletTokenData?.error === false ?
                     <ProtocolFeeTokenTable tokenDatas={formattedTokens} walletTokenDatas={walletTokenData} sweepLimitActive={true} />
                     : null}
-                <TYPE.main> Tokens below weekly sweep threshold ({formatDollarAmount(sweepLimit, 0, true)}) </TYPE.main>
+                {walletTokenData?.error === false ?
+                    <TYPE.main> Tokens below weekly sweep threshold ({formatDollarAmount(sweepLimit, 0, true)}) </TYPE.main> 
+                : null }
+                {walletTokenData?.error === false ?
                 <ProtocolFeeTokenTable tokenDatas={formattedTokens} walletTokenDatas={walletTokenData} sweepLimitActive={false} />
+                : null }
                 <TYPE.main> Top performing Pools by Fees Collected (Epoch: {prevDate.toLocaleDateString()} - {today.toLocaleDateString()}, 00:00 UTC) </TYPE.main>
                 <PoolFeeTable poolDatas={poolData} />
             </AutoColumn>
