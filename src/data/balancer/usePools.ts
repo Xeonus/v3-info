@@ -182,8 +182,7 @@ export function useBalancerPoolData(poolId: string): PoolData | null {
     if (pool && pool.poolType === 'ComposableStable') {
         //remove Composable factory boosted token:
         pool.tokens = pool.tokens.filter((tokens) => tokens.balance < 2596140000000000)
-        }
-
+    }
     return pool || null;
 }
 
@@ -246,8 +245,6 @@ export function useBalancerPoolPageData(poolId: string): {
     }
 
     const { poolSnapshots } = data;
-
-    
     
     const tvlData = poolSnapshots.map((snapshot) => {
         let coingeckoValue = 0;
@@ -260,12 +257,14 @@ export function useBalancerPoolPageData(poolId: string): {
                     let timestamp = snapshot.timestamp * 1000;
                     if (poolSnapshots.length < 90) {
                         const rawData = coingeckoSnapshotData[i].coingeckoRawData.prices;
+                        if ( rawData && rawData.length > 0) {
                         const match = rawData.reduce(function(prev, curr) {
                             return (Math.abs(curr[0] - timestamp) < Math.abs(prev[0] - timestamp) ? curr : prev);
                           });
                           if (match) {
                             timestamp = match[0];
                           }
+                        }
                     }
                     const price = coingeckoSnapshotData[i].coingeckoRawData.prices.find(s => s[0] === timestamp);
                 if (price && snapshotTokenIndex !== null) {
@@ -279,7 +278,7 @@ export function useBalancerPoolPageData(poolId: string): {
             }
         }
         return {
-            value: coingeckoValue> 0 ? coingeckoValue : parseFloat(snapshot.swapVolume),
+            value: coingeckoValue > 0 ? coingeckoValue : parseFloat(snapshot.swapVolume),
             time: unixToDate(snapshot.timestamp),
         }
     });

@@ -65,7 +65,7 @@ export function useBalancerToken(tokenAddress: string): BalancerTokenData {
     if (coingeckoSnapshotData) {
         formatted.forEach(el => {
             const coingeckoPrice = coingeckoSnapshotData?.prices.find(s => s[0] === el.timestamp * 1000);
-            if (coingeckoPrice) {
+            if (coingeckoPrice && coingeckoPrice[1]) {
                 el.price = coingeckoPrice[1]?.toString();
                 el.priceUSD = coingeckoPrice[1];
             } else {
