@@ -27,7 +27,7 @@ const ResponsiveGrid = styled.div`
     grid-gap: 1em;
     align-items: center;
 
-    grid-template-columns: 20px 3.5fr repeat(3, 1fr);
+    grid-template-columns: 20px 3.5fr repeat(2, 1fr);
 
     @media screen and (max-width: 900px) {
         grid-template-columns: 20px 1.5fr repeat(2, 1fr);
@@ -93,9 +93,6 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
                 
                 <Label end={1} fontWeight={400}>
                     {formatDollarAmount(poolData.volumeUSD)}
-                </Label>
-                <Label end={1} fontWeight={400}>
-                    {formatDollarAmount(poolData.volumeUSDWeek)}
                 </Label>
                 <Label end={1} fontWeight={400}>
                     {formatDollarAmount(poolData.tvlUSD)}
@@ -173,9 +170,6 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
                         </ClickableText>
                         <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
                         Volume 24H  {arrow(SORT_FIELD.volumeUSD)}
-                        </ClickableText>
-                        <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
-                        Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
                         </ClickableText>
                         <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
                              TVL{arrow(SORT_FIELD.tvlUSD)}

@@ -4,15 +4,14 @@ import {
     useGetPoolChartDataQuery,
     useGetPoolDataLazyQuery,
     useBalancerPoolSwapFeeSnapshotQuery,
-    PoolSnapshot,
 } from '../../apollo/generated/graphql-codegen-generated';
-import { useActiveNetworkVersion } from 'state/application/hooks';
+import { useActiveNetworkVersion } from '../../state/application/hooks';
 import { useDeltaTimestamps } from '../../utils/queries';
 import { useBlocksFromTimestamps } from '../../hooks/useBlocksFromTimestamps';
 import { useEffect, useState } from 'react';
 import { unixToDate } from '../../utils/date';
-import { BalancerChartDataItem, PoolData, PoolTokenData } from './balancerTypes';
-import { CoingeckoRawData, CoingeckoSnapshotPriceData } from './useTokens';
+import { BalancerChartDataItem, PoolData } from './balancerTypes';
+import { CoingeckoSnapshotPriceData } from './useTokens';
 
 function getPoolValues(
     poolId: string,
@@ -97,7 +96,6 @@ export function useBalancerPools(): PoolData[] {
                 variables: {
                     block24: { number: parseInt(block24.number) },
                     block48: { number: parseInt(block48.number) },
-                    blockWeek: { number: parseInt(blockWeek.number) }, 
                 },
                 context: {
                     uri: activeNetwork.clientUri,
@@ -110,13 +108,12 @@ export function useBalancerPools(): PoolData[] {
         return [];
     }
 
-    const { pools, pools24, pools48, poolsWeek, prices } = data;
+    const { pools, pools24, pools48, prices } = data;
 
     return pools.map((pool) => {
         const poolData = getPoolValues(pool.id, pools, feeData);
         const poolData24 = getPoolValues(pool.id, pools24);
         const poolData48 = getPoolValues(pool.id, pools48);
-        const poolDataWeek = getPoolValues(pool.id, poolsWeek);
 
         
 
@@ -149,7 +146,6 @@ export function useBalancerPools(): PoolData[] {
             volumeUSDChange:
                 (poolData.volume - poolData24.volume - (poolData24.volume - poolData48.volume)) /
                 (poolData24.volume - poolData48.volume),
-            volumeUSDWeek: poolData.volume - poolDataWeek.volume,
             feesUSD: poolData.fees - poolData24.fees,
             feesEpochUSD: poolData.feesEpoch,
             tvlUSD: poolData.tvl,
@@ -182,7 +178,8 @@ export function useBalancerPoolData(poolId: string): PoolData | null {
     if (pool && pool.poolType === 'ComposableStable') {
         //remove Composable factory boosted token:
         pool.tokens = pool.tokens.filter((tokens) => tokens.balance < 2596140000000000)
-    }
+        }
+
     return pool || null;
 }
 
@@ -245,6 +242,8 @@ export function useBalancerPoolPageData(poolId: string): {
     }
 
     const { poolSnapshots } = data;
+
+    
     
     const tvlData = poolSnapshots.map((snapshot) => {
         let coingeckoValue = 0;
@@ -278,7 +277,7 @@ export function useBalancerPoolPageData(poolId: string): {
             }
         }
         return {
-            value: coingeckoValue > 0 ? coingeckoValue : parseFloat(snapshot.swapVolume),
+            value: coingeckoValue> 0 ? coingeckoValue : parseFloat(snapshot.swapVolume),
             time: unixToDate(snapshot.timestamp),
         }
     });

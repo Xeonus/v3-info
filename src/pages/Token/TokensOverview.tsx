@@ -29,7 +29,8 @@ export default function TokensOverview() {
 
     const [savedTokens] = useSavedTokens();
     const [activeNetwork] = useActiveNetworkVersion();
-    const formattedTokens = useBalancerTokens();
+    let formattedTokens = useBalancerTokens();
+    formattedTokens = formattedTokens.filter(x => x.address.toLowerCase() !== '0x1aafc31091d93c3ff003cff5d2d8f7ba2e728425');
     const watchListTokens = formattedTokens.filter((token) => savedTokens.includes(token.address));
 
     return (
