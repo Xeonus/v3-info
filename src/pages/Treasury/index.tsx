@@ -365,14 +365,24 @@ export default function Treasury() {
         totalIncome = (userTxs.cumulativeTokenDatas[userTxs.cumulativeTokenDatas.length - 1].copper) + (userTxs.cumulativeTokenDatas[userTxs.cumulativeTokenDatas.length - 1].feeCollector);
         //Income for the running month
         if (startMonthEntry) {
-            netIncomeRunningMonth = totalIncome - startMonthEntry.copper - startMonthEntry.feeCollector;
+            const c = startMonthEntry ? startMonthEntry.copper : 0;
+            netIncomeRunningMonth = totalIncome - c - startMonthEntry.feeCollector;
         } else if (rangeEntry) {
-            netIncomeRunningMonth = totalIncome - rangeEntry.copper - rangeEntry.feeCollector;
+            const r = rangeEntry ? rangeEntry.copper : 0
+            netIncomeRunningMonth = totalIncome - r - rangeEntry.feeCollector;
         }
         if (previousStartMonthEntry) {
-            percentageChangePrevious = 100 / ((startMonthEntry.copper + startMonthEntry.feeCollector) - (previousStartMonthEntry.copper + previousStartMonthEntry.feeCollector)) * netIncomeRunningMonth - 100;
+            const s = startMonthEntry ? startMonthEntry.copper : 0
+            const ss = startMonthEntry ? startMonthEntry.feeCollector : 0
+            const p = previousStartMonthEntry ? previousStartMonthEntry.copper : 0
+            const ps = previousStartMonthEntry ? previousStartMonthEntry.feeCollector : 0
+            percentageChangePrevious = 100 / ((s + ss) - (p + ps)) * netIncomeRunningMonth - 100;
         } else if (previousRangeEntry) {
-            percentageChangePrevious = 100 / ((rangeEntry.copper + rangeEntry.feeCollector) - (previousRangeEntry.copper + previousRangeEntry.feeCollector)) * netIncomeRunningMonth - 100;
+            const r = rangeEntry ? rangeEntry.copper : 0
+            const rr = rangeEntry ? rangeEntry.feeCollector : 0
+            const pr = previousRangeEntry ? previousRangeEntry.copper : 0
+            const pre = previousRangeEntry ? previousRangeEntry.feeCollector : 0
+            percentageChangePrevious = 100 / ((r + rr) - (pr + pre)) * netIncomeRunningMonth - 100;
         }
     }
 
